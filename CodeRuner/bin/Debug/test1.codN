@@ -1,0 +1,8 @@
+Fanction main
+Begin
+a:String;
+a="*";
+Write (a);
+ReadLine(a);
+
+End

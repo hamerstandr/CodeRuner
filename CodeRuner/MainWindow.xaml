@@ -1,0 +1,97 @@
+﻿<Window x:Class="CodeRuner.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CodeRuner"
+        xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
+        xmlns:busyIndicatorEasy="http://schemas.xceed.com/wpf/xaml/toolkit"
+        mc:Ignorable="d"
+        Title="Code Runer" Height="350" Width="525" Icon="icon.ico">
+    <Window.Resources>
+        <Style x:Key="Local_TextBox" TargetType="{x:Type TextBoxBase}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBoxBase}">
+                        <Border Name="Border" Background="{TemplateBinding Background}">
+                            <ScrollViewer x:Name="PART_ContentHost" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <TabControl>
+            <TabItem Header="CodN">
+                <Grid Margin="5,5,5,5" Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="208*"/>
+                        <RowDefinition Height="101*"/>
+                    </Grid.RowDefinitions>
+                    <busyIndicatorEasy:BusyIndicator x:Name="MyBusyIndicator" 
+        BusyContent="Loading" >
+                        <avalon:TextEditor  x:Name="nevise" ShowLineNumbers="True" Margin="5,28,10,3" KeyUp="nevise_KeyUp">
+                            <!--Text="some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; "-->
+                        </avalon:TextEditor>
+                    </busyIndicatorEasy:BusyIndicator>
+                    <!--<RichTextBox >
+<control:TextViewerPanel/>
+                    </RichTextBox>-->
+                    <ListView x:Name="ErrorList1" Margin="5,2,10,20" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ToolBar Height="28" VerticalAlignment="Top">
+                        <Button Content="File" VerticalAlignment="Top" Click="ButtonFile_Click">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="Open" Header="_Open" Click="Open_Click"/>
+                                    <MenuItem x:Name="Save" Header="_Save" Click="Save_Click"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                        <Button Content="Debug" VerticalAlignment="Stretch" Click="Button_Click" Margin="0,0,0,1"/>
+                        <Button Content="Save *.Exe" Click="SaveExe"/>
+                        <Button Content="Convert" Click="Button_Click_2"/>
+                    </ToolBar>
+                </Grid>
+            </TabItem>
+            <TabItem Header="C#">
+                <Grid  Margin="5,5,5,5" Background="#FFE5E5E5">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="2*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <avalon:TextEditor   x:Name="CshapTextBox" ShowLineNumbers="True" Margin="5,28,10,3" KeyUp="nevise_KeyUp">
+                        <!--Text="some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; some more test&#10; "-->
+                    </avalon:TextEditor>
+                    <!--<RichTextBox Margin="5,28,10,2">
+                        <FlowDocument>
+                    <Paragraph>
+                        <Run Text="RichTextBox"/>
+                    </Paragraph>
+                </FlowDocument>
+                    </RichTextBox>-->
+                    <TextBox x:Name="ErrorText" Margin="5,3,10,20" TextWrapping="Wrap"  Grid.Row="1" local:AttachedProperties.HasBindableLineCount="True" AcceptsReturn="True" Style="{StaticResource Local_TextBox}" SizeChanged="ErrorText_SizeChanged" />
+                    <ToolBar Height="28" VerticalAlignment="Top">
+                        <Button Content="File" VerticalAlignment="Top" Click="ButtonFile_Click">
+                            <Button.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem x:Name="Open1" Header="_Open" Click="Openc_Click"/>
+                                    <MenuItem x:Name="Save1" Header="_Save" Click="Savec_Click"/>
+                                </ContextMenu>
+                            </Button.ContextMenu>
+                        </Button>
+                        <Button Content="Debug" Click="Button_Click_1"/>
+                        <Button Content="Save *.Exe" Click="SaveExe"/>
+
+                    </ToolBar>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

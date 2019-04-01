@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{CA2AD72E-3855-4B27-8D8C-E830A0B120FC}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>CodeRuner</RootNamespace>
+    <AssemblyName>CodeRuner</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr4.Runtime">
+      <HintPath>..\..\..\lib\Antlr4.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="BF.SL.HtmlToRichTextBox, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlToRichTextBox.1.0.0\lib\BF.SL.HtmlToRichTextBox.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UtfUnknown">
+      <HintPath>..\..\..\lib\UtfUnknown.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=3.4.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.3.4.0\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="AttachedProperties.cs" />
+    <Compile Include="Compailer\resolt.cs" />
+    <Compile Include="Compailer\sampleLexer.cs" />
+    <Compile Include="Compailer\sampleListener.cs" />
+    <Compile Include="Compailer\sampleParser.cs" />
+    <Compile Include="Compailer\Scope.cs" />
+    <Compile Include="tabdil_noe.cs" />
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Syntax\ActionScript.xshd" />
+    <None Include="Syntax\Ada.xshd" />
+    <None Include="Syntax\ANTLR.xshd" />
+    <None Include="Syntax\Assembly.xshd" />
+    <None Include="Syntax\AutoHotkey.xshd" />
+    <None Include="Syntax\Batch.xshd" />
+    <None Include="Syntax\Boo.xshd" />
+    <None Include="Syntax\C# -old.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Syntax\C#.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Syntax\C++.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Syntax\C.xshd" />
+    <None Include="Syntax\Ceylon.xshd" />
+    <None Include="Syntax\ChucK.xshd" />
+    <None Include="Syntax\Clojure.xshd" />
+    <None Include="Syntax\CN.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Syntax\Cocoa.xshd" />
+    <None Include="Syntax\CoffeeScript.xshd" />
+    <None Include="Syntax\Cool.xshd" />
+    <None Include="Syntax\CSS.xshd" />
+    <None Include="Syntax\D.xshd" />
+    <None Include="Syntax\Dart.xshd" />
+    <None Include="Syntax\Delphi.xshd" />
+    <None Include="Syntax\Eiffel.xshd" />
+    <None Include="Syntax\Elixir.xshd" />
+    <None Include="Syntax\Erlang.xshd" />
+    <None Include="Syntax\F#.xshd" />
+    <None Include="Syntax\Falcon.xshd" />
+    <None Include="Syntax\Fantom.xshd" />
+    <None Include="Syntax\Fortran95.xshd" />
+    <None Include="Syntax\Go.xshd" />
+    <None Include="Syntax\Goovy.xshd" />
+    <None Include="Syntax\Gui4Cli.xshd" />
+    <None Include="Syntax\Haskell.xshd" />
+    <None Include="Syntax\Haxe.xshd" />
+    <None Include="Syntax\HTML.xshd" />
+    <None Include="Syntax\Icon.xshd" />
+    <None Include="Syntax\ILYC.xshd" />
+    <None Include="Syntax\INI.xshd" />
+    <None Include="Syntax\Io.xshd" />
+    <None Include="Syntax\Java.xshd" />
+    <None Include="Syntax\JavaScript.xshd" />
+    <None Include="Syntax\JSON.xshd" />
+    <None Include="Syntax\Julia.xshd" />
+    <None Include="Syntax\Just BASIC.xshd" />
+    <None Include="Syntax\KiXtart.xshd" />
+    <None Include="Syntax\Kotlin.xshd" />
+    <None Include="Syntax\Lean.xshd" />
+    <None Include="Syntax\Lisp.xshd" />
+    <None Include="Syntax\Lua.xshd" />
+    <None Include="Syntax\Nemerle.xshd" />
+    <None Include="Syntax\Nim.xshd" />
+    <None Include="Syntax\Objective-C.xshd" />
+    <None Include="Syntax\OCaml.xshd" />
+    <None Include="Syntax\ParaSail.xshd" />
+    <None Include="Syntax\Pascal.xshd" />
+    <None Include="Syntax\PHP.xshd" />
+    <None Include="Syntax\Pike.xshd" />
+    <None Include="Syntax\PowerShell.xshd" />
+    <None Include="Syntax\Prolog.xshd" />
+    <None Include="Syntax\PureScript.xshd" />
+    <None Include="Syntax\Python.xshd" />
+    <None Include="Syntax\R.xshd" />
+    <None Include="Syntax\Registry.xshd" />
+    <None Include="Syntax\Resource.xshd" />
+    <None Include="Syntax\Rexx.xshd" />
+    <None Include="Syntax\Rust.xshd" />
+    <None Include="Syntax\Scala.xshd" />
+    <None Include="Syntax\Scheme.xshd" />
+    <None Include="Syntax\Solidity.xshd" />
+    <None Include="Syntax\Spike.xshd" />
+    <None Include="Syntax\SQF.xshd" />
+    <None Include="Syntax\SQL.xshd" />
+    <None Include="Syntax\Swift.xshd" />
+    <None Include="Syntax\TCL.xshd" />
+    <None Include="Syntax\Thrift.xshd" />
+    <None Include="Syntax\TypeScript.xshd" />
+    <None Include="Syntax\Vala.xshd" />
+    <None Include="Syntax\VBNET.xshd" />
+    <None Include="Syntax\VBScript.xshd" />
+    <None Include="Syntax\Verilog.xshd" />
+    <None Include="Syntax\VHDL.xshd" />
+    <None Include="Syntax\Volt.xshd" />
+    <None Include="Syntax\VS Solution.xshd" />
+    <None Include="Syntax\X10.xshd" />
+    <None Include="Syntax\XC.xshd" />
+    <None Include="Syntax\XML.xshd" />
+    <None Include="Syntax\Xtend.xshd" />
+    <None Include="Syntax\_LICENSE" />
+    <None Include="Syntax\_README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

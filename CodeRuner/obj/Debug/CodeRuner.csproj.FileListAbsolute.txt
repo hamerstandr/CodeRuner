@@ -1,0 +1,82 @@
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Syntax\C# -old.xshd
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Syntax\C#.xshd
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Syntax\C++.xshd
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Syntax\CN.xshd
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\CodeRuner.exe.config
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\CodeRuner.exe
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\CodeRuner.pdb
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Antlr4.Runtime.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\BF.SL.HtmlToRichTextBox.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\ICSharpCode.AvalonEdit.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\UtfUnknown.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\ICSharpCode.AvalonEdit.xml
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\MainWindow.g.cs
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\App.g.cs
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\GeneratedInternalTypeHelper.g.cs
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner_MarkupCompile.cache
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner_MarkupCompile.lref
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\MainWindow.baml
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.g.resources
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.Properties.Resources.resources
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.GenerateResource.cache
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.CoreCompileInputs.cache
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.CopyComplete
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.exe
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.pdb
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Aero.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Metro.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.VS2010.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.DataGrid.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.Toolkit.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\de\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\es\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\fr\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\hu\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\it\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\pt-BR\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\ro\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+D:\hamed\Documents\visual studio 2017\Projects\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csprojAssemblyReference.cache
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csprojAssemblyReference.cache
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\MainWindow.g.cs
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\App.g.cs
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner_MarkupCompile.cache
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner_MarkupCompile.lref
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.exe
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.pdb
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Syntax\C# -old.xshd
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Syntax\C#.xshd
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Syntax\C++.xshd
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Syntax\CN.xshd
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\CodeRuner.exe.config
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\CodeRuner.exe
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\CodeRuner.pdb
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\BF.SL.HtmlToRichTextBox.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\ICSharpCode.AvalonEdit.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Aero.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.Metro.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.AvalonDock.Themes.VS2010.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.DataGrid.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\Xceed.Wpf.Toolkit.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\ICSharpCode.AvalonEdit.xml
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\de\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\es\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\fr\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\hu\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\it\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\pt-BR\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\ro\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\ru\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\sv\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\bin\Debug\zh-Hans\Xceed.Wpf.AvalonDock.resources.dll
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\MainWindow.baml
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.g.resources
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.Properties.Resources.resources
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.GenerateResource.cache
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.CoreCompileInputs.cache
+C:\Intel\GitHub\CodeRuner\CodeRuner\obj\Debug\CodeRuner.csproj.CopyComplete

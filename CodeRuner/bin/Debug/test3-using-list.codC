@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+class Program
+    {
+        static IEnumerable<int> GenerateWithYield()
+        {
+            var i = 0;
+            while (i<5) 
+        yield return ++i; 
+        }
+        static void Main()
+        {
+            foreach (var number in GenerateWithYield())
+                Console.WriteLine(number);
+            Console.ReadLine();
+        }
+
+    }

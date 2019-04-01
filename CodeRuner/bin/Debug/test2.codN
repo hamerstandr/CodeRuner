@@ -1,0 +1,18 @@
+Fanction main
+Begin
+i:Int;
+For i  To 5
+Begin
+	j:Int;
+	For j  To i
+	Begin
+	
+	Write ("*");
+	
+	End
+	Write ("\n");
+End
+a:Int;
+Read(a);
+
+End
