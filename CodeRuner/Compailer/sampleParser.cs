@@ -31,14 +31,14 @@ using DFA = Antlr4.Runtime.Dfa.DFA;
 [System.CLSCompliant(false)]
 public partial class sampleParser : Parser {
 	public const int
-		STRING=1, REAL=2, BOOL=3, DOUBLE=4, BYTE=5, IF=6, TO=7, FOR=8, MFOR=9, 
+		STRING=1, INT=2, BOOL=3, DOUBLE=4, BYTE=5, IF=6, TO=7, FOR=8, MFOR=9, 
 		STEP=10, THEN=11, BEGIN=12, END=13, WHILE=14, ELSE=15, READ=16, READLINE=17, 
 		WRITE=18, MODULE=19, INPUT=20, OUTPUT=21, RETURN=22, TRUE=23, FALSE=24, 
 		PLUS=25, OPL=26, OPR=27, MINUS=28, MULTIPLIE=29, DIVIDE=30, ASSIGN=31, 
 		PERCENT=32, FACTORIAL=33, POWER=34, AND=35, OR=36, XOR=37, NOT=38, LESSER=39, 
-		BIGGER=40, LESSEREQUAL=41, BIGGEREQUAL=42, EQUAl=43, OPPOSITE=44, OPIF=45, 
-		OPDOT=46, SEPARATOR=47, ID=48, WS=49, REALCONST=50, INTCONST=51, HEXCONST=52, 
-		STRCONST=53, COMMENT1=54, COMMENT2=55, KAMA=56;
+		BIGGER=40, LESSEREQUAL=41, BIGGEREQUAL=42, EQUAL=43, OPPOSITE=44, OPDOT=45, 
+		SEPARATOR=46, KAMA=47, ID=48, WS=49, REALCONST=50, INTCONST=51, HEXCONST=52, 
+		STRCONST=53, COMMENT1=54, COMMENT2=55;
 	public const int
 		RULE_prog = 0, RULE_ghias = 1, RULE_meghdar = 2, RULE_wr = 3, RULE_entesab = 4, 
 		RULE_scope = 5, RULE_ifThenElse = 6, RULE_while = 7, RULE_forloop = 8, 
@@ -56,18 +56,16 @@ public partial class sampleParser : Parser {
 		"'Else'", "'Read'", "'ReadLine'", "'Write'", "'Fanction'", "'Input'", 
 		"'Output'", "'Return'", "'True'", "'False'", "'+'", "'('", "')'", "'-'", 
 		"'*'", "'/'", "'='", "'%'", "'!'", "'^'", "'And'", "'Or'", "'Xor'", "'Not'", 
-		"'<'", "'>'", "'<='", "'>='", "'=='", "'<>'", "'?'", "':'", "';'", null, 
-		null, null, null, null, null, null, null, "','"
+		"'<'", "'>'", "'<='", "'>='", "'=='", "'<>'", "':'", "';'", "','"
 	};
 	private static readonly string[] _SymbolicNames = {
-		null, "STRING", "REAL", "BOOL", "DOUBLE", "BYTE", "IF", "TO", "FOR", "MFOR", 
+		null, "STRING", "INT", "BOOL", "DOUBLE", "BYTE", "IF", "TO", "FOR", "MFOR", 
 		"STEP", "THEN", "BEGIN", "END", "WHILE", "ELSE", "READ", "READLINE", "WRITE", 
 		"MODULE", "INPUT", "OUTPUT", "RETURN", "TRUE", "FALSE", "PLUS", "OPL", 
 		"OPR", "MINUS", "MULTIPLIE", "DIVIDE", "ASSIGN", "PERCENT", "FACTORIAL", 
 		"POWER", "AND", "OR", "XOR", "NOT", "LESSER", "BIGGER", "LESSEREQUAL", 
-		"BIGGEREQUAL", "EQUAl", "OPPOSITE", "OPIF", "OPDOT", "SEPARATOR", "ID", 
-		"WS", "REALCONST", "INTCONST", "HEXCONST", "STRCONST", "COMMENT1", "COMMENT2", 
-		"KAMA"
+		"BIGGEREQUAL", "EQUAL", "OPPOSITE", "OPDOT", "SEPARATOR", "KAMA", "ID", 
+		"WS", "REALCONST", "INTCONST", "HEXCONST", "STRCONST", "COMMENT1", "COMMENT2"
 	};
 	public static readonly IVocabulary DefaultVocabulary = new Vocabulary(_LiteralNames, _SymbolicNames);
 
@@ -87,23 +85,25 @@ public partial class sampleParser : Parser {
 	public override string SerializedAtn { get { return _serializedATN; } }
 
 
-	    CodeRuner.Compailer.Scope SymbolTable = new CodeRuner.Compailer.Scope(); //Symbols table of variables
-	    CodeRuner.tabdil_noe tabdil_noe = new CodeRuner.tabdil_noe();
-		public  List<string> khata_parser = new List<string>();
-		public string cod= "class Program "+Environment.NewLine+"{ "+Environment.NewLine;
-	    //public  int andis = 0;
-		public void khata_ezaf_kon(string onsor)
+	    public CodeRuner.Compailer.Scope SymbolTable = new CodeRuner.Compailer.Scope();
+	    public CodeRuner.tabdil_noe typeConverter = new CodeRuner.tabdil_noe();
+	public List<string> khata_parser = new List<string>();
+	public string cod = "class Program " + Environment.NewLine + "{ " + Environment.NewLine;
+	    public int errorCount = 0;
+	    
+	public void khata_ezaf_kon(string onsor)
 	    {
-	        khata_parser.Add( onsor);
+	        if (!string.IsNullOrEmpty(onsor) && !khata_parser.Contains(onsor))
+	        {
+	            khata_parser.Add(onsor);
+	            errorCount++;
+	        }
 	    }
+	    
 	    public void khata_pakon()
 	    {
 	        khata_parser.Clear();
-	    }
-	    public void khata_kam_kon()
-	    {
-	        //andis--;
-	        //khata_parser[andis] = "";
+	        errorCount = 0;
 	    }
 
 	public sampleParser(ITokenStream input)
@@ -112,8 +112,6 @@ public partial class sampleParser : Parser {
 		Interpreter = new ParserATNSimulator(this,_ATN);
 	}
 	public partial class ProgContext : ParserRuleContext {
-		public TabeContext _tabe;
-		public Tarife_moteghirContext _tarife_moteghir;
 		public ITerminalNode Eof() { return GetToken(sampleParser.Eof, 0); }
 		public TabeContext[] tabe() {
 			return GetRuleContexts<TabeContext>();
@@ -126,6 +124,12 @@ public partial class sampleParser : Parser {
 		}
 		public Tarife_moteghirContext tarife_moteghir(int i) {
 			return GetRuleContext<Tarife_moteghirContext>(i);
+		}
+		public SakhtarContext[] sakhtar() {
+			return GetRuleContexts<SakhtarContext>();
+		}
+		public SakhtarContext sakhtar(int i) {
+			return GetRuleContext<SakhtarContext>(i);
 		}
 		public ProgContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -150,34 +154,35 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 40;
+			State = 37;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
-			while (_la==MODULE || _la==ID) {
+			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << MODULE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
-				State = 38;
-				switch (TokenStream.La(1)) {
-				case MODULE:
+				State = 35;
+				switch ( Interpreter.AdaptivePredict(TokenStream,0,Context) ) {
+				case 1:
 					{
-					State = 32; _localctx._tabe = tabe();
-					cod+=Environment.NewLine+_localctx._tabe.Csharp;
+					State = 32; tabe();
 					}
 					break;
-				case ID:
+				case 2:
 					{
-					State = 35; _localctx._tarife_moteghir = tarife_moteghir();
-					cod+=Environment.NewLine+_localctx._tarife_moteghir.Csharp+";";
+					State = 33; tarife_moteghir();
 					}
 					break;
-				default:
-					throw new NoViableAltException(this);
+				case 3:
+					{
+					State = 34; sakhtar();
+					}
+					break;
 				}
 				}
-				State = 42;
+				State = 39;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 43; Match(Eof);
+			State = 40; Match(Eof);
 			}
 		}
 		catch (RecognitionException re) {
@@ -198,7 +203,7 @@ public partial class sampleParser : Parser {
 		public ITerminalNode LESSEREQUAL() { return GetToken(sampleParser.LESSEREQUAL, 0); }
 		public ITerminalNode BIGGEREQUAL() { return GetToken(sampleParser.BIGGEREQUAL, 0); }
 		public ITerminalNode OPPOSITE() { return GetToken(sampleParser.OPPOSITE, 0); }
-		public ITerminalNode EQUAl() { return GetToken(sampleParser.EQUAl, 0); }
+		public ITerminalNode EQUAL() { return GetToken(sampleParser.EQUAL, 0); }
 		public GhiasContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -219,47 +224,47 @@ public partial class sampleParser : Parser {
 		GhiasContext _localctx = new GhiasContext(Context, State);
 		EnterRule(_localctx, 2, RULE_ghias);
 		try {
-			State = 57;
+			State = 54;
 			switch (TokenStream.La(1)) {
 			case LESSER:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 45; Match(LESSER);
+				State = 42; Match(LESSER);
 				_localctx.Csharp = "<";
 				}
 				break;
 			case BIGGER:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 47; Match(BIGGER);
+				State = 44; Match(BIGGER);
 				_localctx.Csharp = ">";
 				}
 				break;
 			case LESSEREQUAL:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 49; Match(LESSEREQUAL);
+				State = 46; Match(LESSEREQUAL);
 				_localctx.Csharp = "<=";
 				}
 				break;
 			case BIGGEREQUAL:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 51; Match(BIGGEREQUAL);
-				_localctx.Csharp = "=>";
+				State = 48; Match(BIGGEREQUAL);
+				_localctx.Csharp = ">=";
 				}
 				break;
 			case OPPOSITE:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 53; Match(OPPOSITE);
+				State = 50; Match(OPPOSITE);
 				_localctx.Csharp = "!=";
 				}
 				break;
-			case EQUAl:
+			case EQUAL:
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 55; Match(EQUAl);
+				State = 52; Match(EQUAL);
 				_localctx.Csharp = "==";
 				}
 				break;
@@ -279,24 +284,21 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class MeghdarContext : ParserRuleContext {
-		public string Type;
+		public string Type = "";
 		public string Csharp = "";
 		public IToken _ID;
 		public IToken _INTCONST;
 		public IToken _REALCONST;
-		public FarakhanContext _farakhan;
 		public IToken _STRCONST;
-		public IToken _TRUE;
-		public IToken _FALSE;
 		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
 		public ITerminalNode INTCONST() { return GetToken(sampleParser.INTCONST, 0); }
 		public ITerminalNode REALCONST() { return GetToken(sampleParser.REALCONST, 0); }
-		public FarakhanContext farakhan() {
-			return GetRuleContext<FarakhanContext>(0);
-		}
 		public ITerminalNode STRCONST() { return GetToken(sampleParser.STRCONST, 0); }
 		public ITerminalNode TRUE() { return GetToken(sampleParser.TRUE, 0); }
 		public ITerminalNode FALSE() { return GetToken(sampleParser.FALSE, 0); }
+		public FarakhanContext farakhan() {
+			return GetRuleContext<FarakhanContext>(0);
+		}
 		public MeghdarContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -317,87 +319,66 @@ public partial class sampleParser : Parser {
 		MeghdarContext _localctx = new MeghdarContext(Context, State);
 		EnterRule(_localctx, 4, RULE_meghdar);
 		try {
-			State = 74;
+			State = 69;
 			switch ( Interpreter.AdaptivePredict(TokenStream,3,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 59; _localctx._ID = Match(ID);
+				State = 56; _localctx._ID = Match(ID);
 
-								_localctx.Csharp = (_localctx._ID!=null?_localctx._ID.Text:null);
-								//Check Symbol Exists in Symbol Table
-								var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null));
-								if(symbol == null)
-								{
-								//console.Beep();
-								khata_ezaf_kon("Undefined varaiable "+(_localctx._ID!=null?_localctx._ID.Text:null));
-								_localctx.Type = "no_type";
-									}
-								else 
-								{
-								_localctx.Type = symbol.SymbolType;
-								//khata_ezaf_kon( "Type of "+symbol.SymbolName+" is : "+symbol.SymbolType);
-								//SymbolType
-								}
-							
+				          _localctx.Csharp =  (_localctx._ID!=null?_localctx._ID.Text:null);
+				          var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
+				          if(symbol == null)
+				          {
+				              khata_ezaf_kon("Undefined variable: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+				              _localctx.Type =  "no_type";
+				          }
+				          else 
+				          {
+				              _localctx.Type =  symbol.SymbolType;
+				          }
+				      
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 61; _localctx._INTCONST = Match(INTCONST);
-				_localctx.Csharp = (_localctx._INTCONST!=null?_localctx._INTCONST.Text:null);_localctx.Type = "int";
+				State = 58; _localctx._INTCONST = Match(INTCONST);
+				_localctx.Csharp =  (_localctx._INTCONST!=null?_localctx._INTCONST.Text:null); _localctx.Type =  "int";
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 63; _localctx._REALCONST = Match(REALCONST);
-				_localctx.Csharp = (_localctx._REALCONST!=null?_localctx._REALCONST.Text:null);_localctx.Type = "int";
+				State = 60; _localctx._REALCONST = Match(REALCONST);
+				_localctx.Csharp =  (_localctx._REALCONST!=null?_localctx._REALCONST.Text:null); _localctx.Type =  "double";
 				}
 				break;
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 65; _localctx._farakhan = farakhan();
-
-								_localctx.Csharp = _localctx._farakhan.Csharp;
-								//Check Symbol Exists in Symbol Table
-								var symbol = SymbolTable.FindSymbol(_localctx._farakhan.text);
-								if(symbol == null)
-								{
-								//console.Beep();
-								khata_ezaf_kon("\nUndefined function "+_localctx._farakhan.text);
-								_localctx.Type = "no_type";
-								}
-								else 
-								{
-								_localctx.Type = symbol.SymbolType;
-								//khata_ezaf_kon( "Type of "+symbol.SymbolName+" is : "+symbol.SymbolType);
-								//SymbolType
-								}
-							
+				State = 62; _localctx._STRCONST = Match(STRCONST);
+				_localctx.Csharp =  (_localctx._STRCONST!=null?_localctx._STRCONST.Text:null); _localctx.Type =  "string";
 				}
 				break;
 			case 5:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 68; _localctx._STRCONST = Match(STRCONST);
-				_localctx.Csharp = (_localctx._STRCONST!=null?_localctx._STRCONST.Text:null);_localctx.Type = "string";
+				State = 64; Match(TRUE);
+				_localctx.Csharp =  "true"; _localctx.Type =  "bool";
 				}
 				break;
 			case 6:
 				EnterOuterAlt(_localctx, 6);
 				{
-				State = 70; _localctx._TRUE = Match(TRUE);
-				_localctx.Csharp = (_localctx._TRUE!=null?_localctx._TRUE.Text:null);_localctx.Type = "bool";
+				State = 66; Match(FALSE);
+				_localctx.Csharp =  "false"; _localctx.Type =  "bool";
 				}
 				break;
 			case 7:
 				EnterOuterAlt(_localctx, 7);
 				{
-				State = 72; _localctx._FALSE = Match(FALSE);
-				_localctx.Csharp = (_localctx._FALSE!=null?_localctx._FALSE.Text:null);_localctx.Type = "bool";
+				State = 68; farakhan();
 				}
 				break;
 			}
@@ -446,62 +427,55 @@ public partial class sampleParser : Parser {
 		WrContext _localctx = new WrContext(Context, State);
 		EnterRule(_localctx, 6, RULE_wr);
 		try {
-			State = 96;
+			State = 91;
 			switch ( Interpreter.AdaptivePredict(TokenStream,4,Context) ) {
 			case 1:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 76; Match(WRITE);
-				State = 77; Match(OPL);
-				State = 78; _localctx._ebarat = ebarat(0);
-				_localctx.Csharp = "System.Console.Write("+_localctx._ebarat.Csharp+")";
-				State = 80; Match(OPR);
+				State = 71; Match(WRITE);
+				State = 72; Match(OPL);
+				State = 73; _localctx._ebarat = ebarat(0);
+				State = 74; Match(OPR);
+				_localctx.Csharp =  "System.Console.Write(" + _localctx._ebarat.Csharp + ")";
 				}
 				break;
 			case 2:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 82; Match(READ);
-				State = 83; Match(OPL);
-				State = 84; _localctx._ID = Match(ID);
-					_localctx.Csharp = (_localctx._ID!=null?_localctx._ID.Text:null)+" = System.Console.Read()";
-							//Check Symbol Exists in Symbol Table
-							var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
-							if(symbol == null)
-								{
-								//console.Beep();
-								khata_ezaf_kon("\nUndefined varaiable "+(_localctx._ID!=null?_localctx._ID.Text:null));
-								}	 
-						
-				State = 86; Match(OPR);
+				State = 77; Match(READ);
+				State = 78; Match(OPL);
+				State = 79; _localctx._ID = Match(ID);
+				State = 80; Match(OPR);
+
+				          _localctx.Csharp =  (_localctx._ID!=null?_localctx._ID.Text:null) + " = System.Console.Read()";
+				          var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
+				          if(symbol == null)
+				              khata_ezaf_kon("Undefined variable: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+				      
 				}
 				break;
 			case 3:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 87; Match(READLINE);
-				State = 88; Match(OPL);
-				State = 89; _localctx._ID = Match(ID);
-					_localctx.Csharp = (_localctx._ID!=null?_localctx._ID.Text:null)+" = System.Console.ReadLine()";
-							//Check Symbol Exists in Symbol Table
-							var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
-							if(symbol == null)
-								{
-								//console.Beep();
-								khata_ezaf_kon("\nUndefined varaiable "+(_localctx._ID!=null?_localctx._ID.Text:null));
-								}	 
-						
-				State = 91; Match(OPR);
+				State = 82; Match(READLINE);
+				State = 83; Match(OPL);
+				State = 84; _localctx._ID = Match(ID);
+				State = 85; Match(OPR);
+
+				          _localctx.Csharp =  (_localctx._ID!=null?_localctx._ID.Text:null) + " = System.Console.ReadLine()";
+				          var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
+				          if(symbol == null)
+				              khata_ezaf_kon("Undefined variable: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+				      
 				}
 				break;
 			case 4:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 92; Match(READ);
-				State = 93; Match(OPL);
-					_localctx.Csharp = "System.Console.Read()"; 
-						
-				State = 95; Match(OPR);
+				State = 87; Match(READ);
+				State = 88; Match(OPL);
+				State = 89; Match(OPR);
+				_localctx.Csharp =  "System.Console.Read()";
 				}
 				break;
 			}
@@ -549,27 +523,18 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 98; _localctx._ID = Match(ID);
-			State = 99; Match(ASSIGN);
-			State = 100; _localctx._ebarat = ebarat(0);
-				
-						_localctx.Csharp = (_localctx._ID!=null?_localctx._ID.Text:null)+" = "+_localctx._ebarat.Csharp+";";
-						//Check Symbol Exists in Symbol Table
-						var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
-						if(symbol == null)
-							{
-							//console.Beep();
-							khata_ezaf_kon("\nUndefined varaiable "+(_localctx._ID!=null?_localctx._ID.Text:null));
-							}
-						else 
-						{
-						if (tabdil_noe.tabdil_pazir(_localctx._ebarat.Type,symbol.SymbolType))
-						khata_ezaf_kon( "Assign "+symbol.SymbolType+" to "+_localctx._ebarat.Type +" isn't valid");
-						//SymbolType
-						}
-						
-					
-			State = 102; Match(SEPARATOR);
+			State = 93; _localctx._ID = Match(ID);
+			State = 94; Match(ASSIGN);
+			State = 95; _localctx._ebarat = ebarat(0);
+			State = 96; Match(SEPARATOR);
+
+			          _localctx.Csharp =  (_localctx._ID!=null?_localctx._ID.Text:null) + " = " + _localctx._ebarat.Csharp + ";";
+			          var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
+			          if(symbol == null)
+			              khata_ezaf_kon("Undefined variable: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+			          else if (typeConverter.bareCnoe(_localctx._ebarat.Type, symbol.SymbolType))
+			              khata_ezaf_kon("Cannot assign " + _localctx._ebarat.Type + " to " + symbol.SymbolType);
+			      
 			}
 		}
 		catch (RecognitionException re) {
@@ -617,30 +582,30 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 104; Match(BEGIN);
+			State = 99; Match(BEGIN);
 
-											_localctx.Csharp+="{";
-											SymbolTable.EnterScope();
-											
-			State = 111;
+			          _localctx.Csharp += "{";
+			          SymbolTable.EnterScope();
+			      
+			State = 106;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
 				{
-				State = 106; _localctx._sakhtar = sakhtar();
-				_localctx.Csharp+=Environment.NewLine+_localctx._sakhtar.Csharp;
+				State = 101; _localctx._sakhtar = sakhtar();
+				_localctx.Csharp += Environment.NewLine + _localctx._sakhtar.Csharp;
 				}
 				}
-				State = 113;
+				State = 108;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 114; Match(END);
+			State = 109; Match(END);
 
-										   _localctx.Csharp+=Environment.NewLine+"}"+Environment.NewLine;
-										   SymbolTable.ExitScope();
-										   
+			          _localctx.Csharp += Environment.NewLine + "}";
+			          SymbolTable.ExitScope();
+			      
 			}
 		}
 		catch (RecognitionException re) {
@@ -658,7 +623,7 @@ public partial class sampleParser : Parser {
 		public string Csharp = "";
 		public EbaratContext _ebarat;
 		public ScopeContext _scope;
-		public IfThenElseContext a;
+		public IfThenElseContext _ifThenElse;
 		public SakhtarContext _sakhtar;
 		public ITerminalNode IF() { return GetToken(sampleParser.IF, 0); }
 		public EbaratContext ebarat() {
@@ -672,14 +637,14 @@ public partial class sampleParser : Parser {
 		public ITerminalNode ELSE(int i) {
 			return GetToken(sampleParser.ELSE, i);
 		}
-		public ITerminalNode BEGIN() { return GetToken(sampleParser.BEGIN, 0); }
-		public ITerminalNode END() { return GetToken(sampleParser.END, 0); }
 		public IfThenElseContext[] ifThenElse() {
 			return GetRuleContexts<IfThenElseContext>();
 		}
 		public IfThenElseContext ifThenElse(int i) {
 			return GetRuleContext<IfThenElseContext>(i);
 		}
+		public ITerminalNode BEGIN() { return GetToken(sampleParser.BEGIN, 0); }
+		public ITerminalNode END() { return GetToken(sampleParser.END, 0); }
 		public SakhtarContext[] sakhtar() {
 			return GetRuleContexts<SakhtarContext>();
 		}
@@ -710,57 +675,55 @@ public partial class sampleParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 117; Match(IF);
-			State = 118; _localctx._ebarat = ebarat(0);
+			State = 112; Match(IF);
+			State = 113; _localctx._ebarat = ebarat(0);
+			State = 114; Match(THEN);
+			State = 115; _localctx._scope = scope();
 
-									if (tabdil_noe.tabdil_pazir(_localctx._ebarat.Type, "bool"))
-										{
-										khata_ezaf_kon("the condition must have boolean type but have "+_localctx._ebarat.Type+" type"); 
-										}
-								
-			State = 120; Match(THEN);
-			State = 121; _localctx._scope = scope();
-			_localctx.Csharp = Environment.NewLine+" if ("+_localctx._ebarat.Csharp+") "+Environment.NewLine+_localctx._scope.Csharp+Environment.NewLine;
-			State = 129;
+			          if (_localctx._ebarat.Type != "bool")
+			              khata_ezaf_kon("Condition must be boolean but has " + _localctx._ebarat.Type);
+			          _localctx.Csharp =  "if (" + _localctx._ebarat.Csharp + ")" + Environment.NewLine + _localctx._scope.Csharp;
+			      
+			State = 123;
 			ErrorHandler.Sync(this);
 			_alt = Interpreter.AdaptivePredict(TokenStream,6,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.InvalidAltNumber ) {
 				if ( _alt==1 ) {
 					{
 					{
-					State = 123; Match(ELSE);
-					State = 124; _localctx.a = ifThenElse();
-					_localctx.Csharp+="else "+_localctx.a.Csharp;
+					State = 117; Match(ELSE);
+					State = 118; _localctx._ifThenElse = ifThenElse();
+					_localctx.Csharp += "else " + _localctx.Csharp;
 					}
 					} 
 				}
-				State = 131;
+				State = 125;
 				ErrorHandler.Sync(this);
 				_alt = Interpreter.AdaptivePredict(TokenStream,6,Context);
 			}
-			State = 145;
+			State = 139;
 			switch ( Interpreter.AdaptivePredict(TokenStream,8,Context) ) {
 			case 1:
 				{
-				State = 132; Match(ELSE);
-				State = 133; Match(BEGIN);
-				_localctx.Csharp+="else "+Environment.NewLine+"{"+Environment.NewLine;
-				State = 140;
+				State = 126; Match(ELSE);
+				State = 127; Match(BEGIN);
+				_localctx.Csharp += "else" + Environment.NewLine + "{";
+				State = 134;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 				while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 					{
 					{
-					State = 135; _localctx._sakhtar = sakhtar();
-					_localctx.Csharp+=Environment.NewLine+_localctx._sakhtar.Csharp;
+					State = 129; _localctx._sakhtar = sakhtar();
+					_localctx.Csharp += Environment.NewLine + _localctx._sakhtar.Csharp;
 					}
 					}
-					State = 142;
+					State = 136;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.La(1);
 				}
-				State = 143; Match(END);
-				_localctx.Csharp+=Environment.NewLine+"}";
+				State = 137; Match(END);
+				_localctx.Csharp += Environment.NewLine + "}";
 				}
 				break;
 			}
@@ -816,32 +779,30 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 147; Match(WHILE);
-			State = 148; _localctx._ebarat = ebarat(0);
+			State = 141; Match(WHILE);
+			State = 142; _localctx._ebarat = ebarat(0);
+			State = 143; Match(BEGIN);
 
-						_localctx.Csharp = "while ("+_localctx._ebarat.Csharp+")"+Environment.NewLine+"{"+Environment.NewLine;
-									if (tabdil_noe.tabdil_pazir(_localctx._ebarat.Type, "bool"))
-										{
-										khata_ezaf_kon("the condition must have boolean type but have "+_localctx._ebarat.Type+" type"); 
-										}
-						
-			State = 150; Match(BEGIN);
-			State = 156;
+			          if (_localctx._ebarat.Type != "bool")
+			              khata_ezaf_kon("Condition must be boolean but has " + _localctx._ebarat.Type);
+			          _localctx.Csharp =  "while (" + _localctx._ebarat.Csharp + ")" + Environment.NewLine + "{";
+			      
+			State = 150;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
 				{
-				State = 151; _localctx._sakhtar = sakhtar();
-				_localctx.Csharp+=Environment.NewLine+_localctx._sakhtar.Csharp;
+				State = 145; _localctx._sakhtar = sakhtar();
+				_localctx.Csharp += Environment.NewLine + _localctx._sakhtar.Csharp;
 				}
 				}
-				State = 158;
+				State = 152;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 159; Match(END);
-			_localctx.Csharp+=Environment.NewLine+"}";
+			State = 153; Match(END);
+			_localctx.Csharp += Environment.NewLine + "}";
 			}
 		}
 		catch (RecognitionException re) {
@@ -856,28 +817,23 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class ForloopContext : ParserRuleContext {
-		public string Csharp;
-		public IToken a;
-		public Tarife_moteghirContext aa;
-		public Tarife_moteghirContext _tarife_moteghir;
-		public EntesabContext _entesab;
-		public EbaratContext b;
+		public string Csharp = "";
+		public IToken _ID;
+		public EbaratContext _ebarat;
 		public SakhtarContext _sakhtar;
 		public ITerminalNode FOR() { return GetToken(sampleParser.FOR, 0); }
+		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
+		public ITerminalNode ASSIGN() { return GetToken(sampleParser.ASSIGN, 0); }
+		public EbaratContext[] ebarat() {
+			return GetRuleContexts<EbaratContext>();
+		}
+		public EbaratContext ebarat(int i) {
+			return GetRuleContext<EbaratContext>(i);
+		}
 		public ITerminalNode TO() { return GetToken(sampleParser.TO, 0); }
 		public ITerminalNode THEN() { return GetToken(sampleParser.THEN, 0); }
 		public ITerminalNode BEGIN() { return GetToken(sampleParser.BEGIN, 0); }
 		public ITerminalNode END() { return GetToken(sampleParser.END, 0); }
-		public EbaratContext ebarat() {
-			return GetRuleContext<EbaratContext>(0);
-		}
-		public EntesabContext entesab() {
-			return GetRuleContext<EntesabContext>(0);
-		}
-		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
-		public Tarife_moteghirContext tarife_moteghir() {
-			return GetRuleContext<Tarife_moteghirContext>(0);
-		}
 		public SakhtarContext[] sakhtar() {
 			return GetRuleContexts<SakhtarContext>();
 		}
@@ -907,54 +863,34 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 162; Match(FOR);
-			_localctx.Csharp+="for (";
-			State = 172;
-			switch ( Interpreter.AdaptivePredict(TokenStream,10,Context) ) {
-			case 1:
-				{
-				State = 164; _localctx.a = Match(ID);
-				_localctx.Csharp+=(_localctx.a!=null?_localctx.a.Text:null)+"=0";
-				}
-				break;
-			case 2:
-				{
-				State = 166; _localctx.aa = _localctx._tarife_moteghir = tarife_moteghir();
-				_localctx.Csharp+=_localctx._tarife_moteghir.Csharp;
-				}
-				break;
-			case 3:
-				{
-				State = 169; _localctx._entesab = entesab();
-				_localctx.Csharp = _localctx._entesab.Csharp;
-				}
-				break;
-			}
-			_localctx.Csharp+=";";
-			State = 175; Match(TO);
-			State = 176; _localctx.b = ebarat(0);
+			State = 156; Match(FOR);
+			State = 157; _localctx._ID = Match(ID);
+			State = 158; Match(ASSIGN);
+			State = 159; _localctx._ebarat = ebarat(0);
+			State = 160; Match(TO);
+			State = 161; _localctx._ebarat = ebarat(0);
+			State = 162; Match(THEN);
+			State = 163; Match(BEGIN);
 
-                _localctx.Csharp += (_localctx.a != null ? _localctx.a.Text : null) + (_localctx.aa != null ? _localctx.aa.Csharp : null) + "<" + _localctx.b.Csharp + ";" + (_localctx.a != null ? _localctx.a.Text : null) + (_localctx.aa != null ? _localctx.aa.Csharp : null) + "++)" + Environment.NewLine;
-
-                State = 178; Match(THEN);
-			State = 179; Match(BEGIN);
-			_localctx.Csharp+=" {";
-			State = 186;
+			          string counter = (_localctx._ID!=null?_localctx._ID.Text:null);
+			          _localctx.Csharp =  "for (" + counter + " = " + _localctx._ebarat.Csharp + "; " + counter + " <= " + _localctx._ebarat.Csharp + "; " + counter + "++)" + Environment.NewLine + "{";
+			      
+			State = 170;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
 				{
-				State = 181; _localctx._sakhtar = sakhtar();
-				_localctx.Csharp+=_localctx._sakhtar.Csharp;
+				State = 165; _localctx._sakhtar = sakhtar();
+				_localctx.Csharp += Environment.NewLine + _localctx._sakhtar.Csharp;
 				}
 				}
-				State = 188;
+				State = 172;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 189; Match(END);
-			_localctx.Csharp+=" }";
+			State = 173; Match(END);
+			_localctx.Csharp += Environment.NewLine + "}";
 			}
 		}
 		catch (RecognitionException re) {
@@ -969,27 +905,23 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class ForsteploopContext : ParserRuleContext {
-		public string Csharp;
-		public IToken a;
-		public Tarife_moteghirContext _tarife_moteghir;
-		public EntesabContext _entesab;
-		public EbaratContext b;
+		public string Csharp = "";
+		public IToken _ID;
+		public EbaratContext _ebarat;
 		public SakhtarContext _sakhtar;
 		public ITerminalNode MFOR() { return GetToken(sampleParser.MFOR, 0); }
+		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
+		public ITerminalNode ASSIGN() { return GetToken(sampleParser.ASSIGN, 0); }
+		public EbaratContext[] ebarat() {
+			return GetRuleContexts<EbaratContext>();
+		}
+		public EbaratContext ebarat(int i) {
+			return GetRuleContext<EbaratContext>(i);
+		}
 		public ITerminalNode TO() { return GetToken(sampleParser.TO, 0); }
 		public ITerminalNode THEN() { return GetToken(sampleParser.THEN, 0); }
 		public ITerminalNode BEGIN() { return GetToken(sampleParser.BEGIN, 0); }
 		public ITerminalNode END() { return GetToken(sampleParser.END, 0); }
-		public EbaratContext ebarat() {
-			return GetRuleContext<EbaratContext>(0);
-		}
-		public Tarife_moteghirContext tarife_moteghir() {
-			return GetRuleContext<Tarife_moteghirContext>(0);
-		}
-		public EntesabContext entesab() {
-			return GetRuleContext<EntesabContext>(0);
-		}
-		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
 		public SakhtarContext[] sakhtar() {
 			return GetRuleContexts<SakhtarContext>();
 		}
@@ -1019,58 +951,34 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 192; Match(MFOR);
-			_localctx.Csharp+="for (";
-			State = 203;
-			switch ( Interpreter.AdaptivePredict(TokenStream,12,Context) ) {
-			case 1:
-				{
-				State = 194; _localctx.a = Match(ID);
-				_localctx.Csharp+=(_localctx.a!=null?_localctx.a.Text:null)+"=0";
-				}
-				break;
-			case 2:
-				{
-				State = 196; _localctx._tarife_moteghir = tarife_moteghir();
-				_localctx.Csharp+=_localctx._tarife_moteghir.Csharp;
-				}
-				break;
-			case 3:
-				{
-				}
-				break;
-			case 4:
-				{
-				State = 200; _localctx._entesab = entesab();
-				_localctx.Csharp = _localctx._entesab.Csharp;
-				}
-				break;
-			}
-			_localctx.Csharp+=";";
-			State = 206; Match(TO);
-			State = 207; _localctx.b = ebarat(0);
+			State = 176; Match(MFOR);
+			State = 177; _localctx._ID = Match(ID);
+			State = 178; Match(ASSIGN);
+			State = 179; _localctx._ebarat = ebarat(0);
+			State = 180; Match(TO);
+			State = 181; _localctx._ebarat = ebarat(0);
+			State = 182; Match(THEN);
+			State = 183; Match(BEGIN);
 
-												_localctx.Csharp+=(_localctx.a!=null?_localctx.a.Text:null)+">"+ _localctx.b.Csharp+";"+(_localctx.a!=null?_localctx.a.Text:null)+"--)"+Environment.NewLine;
-											
-			State = 209; Match(THEN);
-			State = 210; Match(BEGIN);
-			_localctx.Csharp+=" {";
-			State = 217;
+			          string counter = (_localctx._ID!=null?_localctx._ID.Text:null);
+			          _localctx.Csharp =  "for (" + counter + " = " + _localctx._ebarat.Csharp + "; " + counter + " >= " + _localctx._ebarat.Csharp + "; " + counter + "--)" + Environment.NewLine + "{";
+			      
+			State = 190;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
 				{
-				State = 212; _localctx._sakhtar = sakhtar();
-				_localctx.Csharp+=_localctx._sakhtar.Csharp;
+				State = 185; _localctx._sakhtar = sakhtar();
+				_localctx.Csharp += Environment.NewLine + _localctx._sakhtar.Csharp;
 				}
 				}
-				State = 219;
+				State = 192;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 220; Match(END);
-			_localctx.Csharp+=" }";
+			State = 193; Match(END);
+			_localctx.Csharp += Environment.NewLine + "}";
 			}
 		}
 		catch (RecognitionException re) {
@@ -1085,11 +993,13 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class NoeContext : ParserRuleContext {
-		public string Type;
-		public string Csharp;
+		public string Type = "";
+		public string Csharp = "";
 		public ITerminalNode STRING() { return GetToken(sampleParser.STRING, 0); }
-		public ITerminalNode REAL() { return GetToken(sampleParser.REAL, 0); }
+		public ITerminalNode INT() { return GetToken(sampleParser.INT, 0); }
 		public ITerminalNode BOOL() { return GetToken(sampleParser.BOOL, 0); }
+		public ITerminalNode DOUBLE() { return GetToken(sampleParser.DOUBLE, 0); }
+		public ITerminalNode BYTE() { return GetToken(sampleParser.BYTE, 0); }
 		public NoeContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1110,43 +1020,45 @@ public partial class sampleParser : Parser {
 		NoeContext _localctx = new NoeContext(Context, State);
 		EnterRule(_localctx, 20, RULE_noe);
 		try {
-			State = 233;
-			switch ( Interpreter.AdaptivePredict(TokenStream,14,Context) ) {
-			case 1:
+			State = 206;
+			switch (TokenStream.La(1)) {
+			case STRING:
 				EnterOuterAlt(_localctx, 1);
 				{
-				State = 223; Match(STRING);
-				_localctx.Csharp = "string";_localctx.Type =  "string"; 
+				State = 196; Match(STRING);
+				_localctx.Csharp = "string"; _localctx.Type =  "string";
 				}
 				break;
-			case 2:
+			case INT:
 				EnterOuterAlt(_localctx, 2);
 				{
-				State = 225; Match(REAL);
-				_localctx.Csharp = "int";_localctx.Type =  "int"; 
+				State = 198; Match(INT);
+				_localctx.Csharp = "int"; _localctx.Type =  "int";
 				}
 				break;
-			case 3:
+			case BOOL:
 				EnterOuterAlt(_localctx, 3);
 				{
-				State = 227; Match(BOOL);
-				_localctx.Csharp = "bool";_localctx.Type =  "dool"; 
+				State = 200; Match(BOOL);
+				_localctx.Csharp = "bool"; _localctx.Type =  "bool";
 				}
 				break;
-			case 4:
+			case DOUBLE:
 				EnterOuterAlt(_localctx, 4);
 				{
-				State = 229; Match(BOOL);
-				_localctx.Csharp = "double";_localctx.Type =  "double"; 
+				State = 202; Match(DOUBLE);
+				_localctx.Csharp = "double"; _localctx.Type =  "double";
 				}
 				break;
-			case 5:
+			case BYTE:
 				EnterOuterAlt(_localctx, 5);
 				{
-				State = 231; Match(BOOL);
-				_localctx.Csharp = "byte";_localctx.Type =  "byte"; 
+				State = 204; Match(BYTE);
+				_localctx.Csharp = "byte"; _localctx.Type = "byte"
 				}
 				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -1162,6 +1074,7 @@ public partial class sampleParser : Parser {
 
 	public partial class Tarife_moteghirContext : ParserRuleContext {
 		public string Csharp = "";
+		public string id = "";
 		public IToken _ID;
 		public NoeContext _noe;
 		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
@@ -1192,15 +1105,18 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 235; _localctx._ID = Match(ID);
-			State = 236; Match(OPDOT);
-			State = 237; _localctx._noe = noe();
-			State = 238; Match(SEPARATOR);
+			State = 208; _localctx._ID = Match(ID);
+			State = 209; Match(OPDOT);
+			State = 210; _localctx._noe = noe();
+			State = 211; Match(SEPARATOR);
 
-													_localctx.Csharp+=_localctx._noe.Csharp+" "+(_localctx._ID!=null?_localctx._ID.Text:null);
-													if (SymbolTable.FindInScope((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),"varaiable"))
-														SymbolTable.AddSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),_localctx._noe.Type);
-													
+			          _localctx.id =  (_localctx._ID!=null?_localctx._ID.Text:null).ToLower();
+			          _localctx.Csharp =  _localctx._noe.Csharp + " " + (_localctx._ID!=null?_localctx._ID.Text:null);
+			          if (!SymbolTable.FindInScope(_localctx.id, "variable"))
+			              khata_ezaf_kon("Variable redefinition: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+			          else
+			              SymbolTable.AddSymbol(_localctx.id, _localctx._noe.Type);
+			      
 			}
 		}
 		catch (RecognitionException re) {
@@ -1215,11 +1131,10 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class FarakhanContext : ParserRuleContext {
-		public string Type;
-		public string text;
+		public string Type = "void";
+		public string text = "";
 		public string Csharp = "";
 		public IToken _ID;
-		public EbaratContext _ebarat;
 		public ITerminalNode ID() { return GetToken(sampleParser.ID, 0); }
 		public ITerminalNode OPL() { return GetToken(sampleParser.OPL, 0); }
 		public ITerminalNode OPR() { return GetToken(sampleParser.OPR, 0); }
@@ -1256,44 +1171,43 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 241; _localctx._ID = Match(ID);
-			_localctx.Csharp+=(_localctx._ID!=null?_localctx._ID.Text:null)+"(";
-			State = 243; Match(OPL);
-			State = 255;
+			State = 214; _localctx._ID = Match(ID);
+			State = 215; Match(OPL);
+			State = 224;
 			_la = TokenStream.La(1);
-			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TRUE) | (1L << FALSE) | (1L << OPL) | (1L << ID) | (1L << REALCONST) | (1L << INTCONST) | (1L << STRCONST))) != 0)) {
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TRUE) | (1L << FALSE) | (1L << OPL) | (1L << NOT) | (1L << ID) | (1L << REALCONST) | (1L << INTCONST) | (1L << STRCONST))) != 0)) {
 				{
-				State = 244; _localctx._ebarat = ebarat(0);
-				_localctx.Csharp+=_localctx._ebarat.Csharp;
-				State = 252;
+				State = 216; ebarat(0);
+				State = 221;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 				while (_la==KAMA) {
 					{
 					{
-					State = 246; Match(KAMA);
-					State = 247; _localctx._ebarat = ebarat(0);
-					_localctx.Csharp+=","+_localctx._ebarat.Csharp;
+					State = 217; Match(KAMA);
+					State = 218; ebarat(0);
 					}
 					}
-					State = 254;
+					State = 223;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.La(1);
 				}
 				}
 			}
 
-			{_localctx.Csharp+=")";}
-			State = 258; Match(OPR);
+			State = 226; Match(OPR);
 
-												var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null));
-												if(symbol == null){khata_ezaf_kon( "\nUndefined function "+(_localctx._ID!=null?_localctx._ID.Text:null));_localctx.Type = "no_type";}
-												else {
-													khata_ezaf_kon( "Type of "+symbol.SymbolName+" is : "+symbol.SymbolType+" ");
-													_localctx.Type = symbol.SymbolType;
-													_localctx.text = (_localctx._ID!=null?_localctx._ID.Text:null);
-													 }
-												
+			          _localctx.Csharp =  (_localctx._ID!=null?_localctx._ID.Text:null) + "(...)";
+			          var symbol = SymbolTable.FindSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower());
+			          if(symbol == null){
+			              khata_ezaf_kon("Undefined function: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+			              _localctx.Type =  "no_type";
+			          }
+			          else {
+			              _localctx.Type =  symbol.SymbolType;
+			              _localctx.text =  (_localctx._ID!=null?_localctx._ID.Text:null);
+			          }
+			      
 			}
 		}
 		catch (RecognitionException re) {
@@ -1372,78 +1286,82 @@ public partial class sampleParser : Parser {
 		SakhtarContext _localctx = new SakhtarContext(Context, State);
 		EnterRule(_localctx, 26, RULE_sakhtar);
 		try {
-			EnterOuterAlt(_localctx, 1);
-			{
-			State = 295;
-			switch ( Interpreter.AdaptivePredict(TokenStream,17,Context) ) {
+			State = 263;
+			switch ( Interpreter.AdaptivePredict(TokenStream,15,Context) ) {
 			case 1:
+				EnterOuterAlt(_localctx, 1);
 				{
-				State = 261; _localctx._entesab = entesab();
-				_localctx.Csharp = _localctx._entesab.Csharp;
+				State = 229; _localctx._entesab = entesab();
+				_localctx.Csharp =  _localctx._entesab.Csharp;
 				}
 				break;
 			case 2:
+				EnterOuterAlt(_localctx, 2);
 				{
-				State = 264; Match(RETURN);
-				State = 265; _localctx._ebarat = ebarat(0);
-				State = 266; Match(SEPARATOR);
-
-																_localctx.Csharp = "return "+_localctx._ebarat.Csharp+";";
-																if(_localctx.Type=="void")_localctx.Type = _localctx._ebarat.Type;
-															 
+				State = 232; Match(RETURN);
+				State = 233; _localctx._ebarat = ebarat(0);
+				State = 234; Match(SEPARATOR);
+				_localctx.Csharp =  "return " + _localctx._ebarat.Csharp + ";"; _localctx.Type =  _localctx._ebarat.Type;
 				}
 				break;
 			case 3:
+				EnterOuterAlt(_localctx, 3);
 				{
-				State = 269; _localctx._ifThenElse = ifThenElse();
-				_localctx.Csharp = _localctx._ifThenElse.Csharp;
+				State = 237; _localctx._ifThenElse = ifThenElse();
+				_localctx.Csharp =  _localctx._ifThenElse.Csharp;
 				}
 				break;
 			case 4:
+				EnterOuterAlt(_localctx, 4);
 				{
-				State = 272; _localctx._while = @while();
-				_localctx.Csharp = _localctx._while.Csharp;
+				State = 240; _localctx._while = @while();
+				_localctx.Csharp =  _localctx._while.Csharp;
 				}
 				break;
 			case 5:
+				EnterOuterAlt(_localctx, 5);
 				{
-				State = 275; _localctx._farakhan = farakhan();
-				State = 276; Match(SEPARATOR);
-				_localctx.Csharp = _localctx._farakhan.Csharp+";";
+				State = 243; _localctx._farakhan = farakhan();
+				State = 244; Match(SEPARATOR);
+				_localctx.Csharp =  _localctx._farakhan.Csharp + ";";
 				}
 				break;
 			case 6:
+				EnterOuterAlt(_localctx, 6);
 				{
-				State = 279; _localctx._wr = wr();
-				State = 280; Match(SEPARATOR);
-				_localctx.Csharp = _localctx._wr.Csharp+";";
+				State = 247; _localctx._wr = wr();
+				State = 248; Match(SEPARATOR);
+				_localctx.Csharp =  _localctx._wr.Csharp + ";";
 				}
 				break;
 			case 7:
+				EnterOuterAlt(_localctx, 7);
 				{
-				State = 283; _localctx._tarife_moteghir = tarife_moteghir();
-				_localctx.Csharp = _localctx._tarife_moteghir.Csharp+";";
+				State = 251; _localctx._tarife_moteghir = tarife_moteghir();
+				_localctx.Csharp =  _localctx._tarife_moteghir.Csharp + ";";
 				}
 				break;
 			case 8:
+				EnterOuterAlt(_localctx, 8);
 				{
-				State = 286; _localctx._forloop = forloop();
-				_localctx.Csharp = _localctx._forloop.Csharp;
+				State = 254; _localctx._forloop = forloop();
+				_localctx.Csharp =  _localctx._forloop.Csharp;
 				}
 				break;
 			case 9:
+				EnterOuterAlt(_localctx, 9);
 				{
-				State = 289; _localctx._forsteploop = forsteploop();
-				_localctx.Csharp = _localctx._forsteploop.Csharp;
+				State = 257; _localctx._forsteploop = forsteploop();
+				_localctx.Csharp =  _localctx._forsteploop.Csharp;
 				}
 				break;
 			case 10:
+				EnterOuterAlt(_localctx, 10);
 				{
-				State = 292; _localctx._scope = scope();
-				_localctx.Csharp = _localctx._scope.Csharp;
+				State = 260; _localctx._scope = scope();
+				_localctx.Csharp =  _localctx._scope.Csharp;
 				}
 				break;
-			}
 			}
 		}
 		catch (RecognitionException re) {
@@ -1460,10 +1378,9 @@ public partial class sampleParser : Parser {
 	public partial class TabeContext : ParserRuleContext {
 		public string Type = "void";
 		public string Csharp = "";
-		public string A = "void";
-		public string B = "";
-		public string C = "";
-		public string D = "";
+		public string name = "";
+		public string paramsStr = "";
+		public string body = "";
 		public IToken _ID;
 		public Tarife_moteghirContext _tarife_moteghir;
 		public NoeContext _noe;
@@ -1517,82 +1434,84 @@ public partial class sampleParser : Parser {
 		try {
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 297; Match(MODULE);
-			State = 298; _localctx._ID = Match(ID);
-			_localctx.B = (_localctx._ID!=null?_localctx._ID.Text:null).ToLower();
-								if (SymbolTable.FindInScope((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),"function"))
-								/*SymbolTable.AddSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),"function");*/
-								SymbolTable.EnterScope();
-								
-			State = 309;
+			State = 265; Match(MODULE);
+			State = 266; _localctx._ID = Match(ID);
+
+			          _localctx.name =  (_localctx._ID!=null?_localctx._ID.Text:null).ToLower();
+			          if (!SymbolTable.FindInScope(_localctx.name, "function"))
+			              khata_ezaf_kon("Function redefinition: " + (_localctx._ID!=null?_localctx._ID.Text:null));
+			          SymbolTable.EnterScope();
+			      
+			State = 277;
 			_la = TokenStream.La(1);
 			if (_la==INPUT) {
 				{
-				State = 300; Match(INPUT);
-				State = 301; Match(OPDOT);
-				State = 305;
+				State = 268; Match(INPUT);
+				State = 269; Match(OPDOT);
+				State = 273;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 				do {
 					{
 					{
-					State = 302; _localctx._tarife_moteghir = tarife_moteghir();
-					_localctx.C+=_localctx._tarife_moteghir.Csharp+",";
+					State = 270; _localctx._tarife_moteghir = tarife_moteghir();
+					_localctx.paramsStr += _localctx._tarife_moteghir.Csharp + ", ";
 					}
 					}
-					State = 307;
+					State = 275;
 					ErrorHandler.Sync(this);
 					_la = TokenStream.La(1);
 				} while ( _la==ID );
 				}
 			}
 
-			State = 317;
+			State = 285;
 			_la = TokenStream.La(1);
 			if (_la==OUTPUT) {
 				{
-				State = 311; Match(OUTPUT);
-				State = 312; Match(OPDOT);
-				State = 313; _localctx._noe = noe();
-				State = 314; Match(SEPARATOR);
-				_localctx.A = _localctx._noe.Csharp;_localctx.Type = _localctx._noe.Type;
+				State = 279; Match(OUTPUT);
+				State = 280; Match(OPDOT);
+				State = 281; _localctx._noe = noe();
+				State = 282; Match(SEPARATOR);
+				_localctx.Type =  _localctx._noe.Type;
 				}
 			}
 
-			State = 319; Match(BEGIN);
-			SymbolTable.EnterScope();SymbolTable.AddSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),_localctx.Type);
-			State = 326;
+			State = 287; Match(BEGIN);
+
+			          SymbolTable.EnterScope();
+			          SymbolTable.AddSymbol(_localctx.name, _localctx.Type);
+			          string returnType = string.IsNullOrEmpty(_localctx.Type) || _localctx.Type == "void" ? "void" : _localctx.Type;
+			          string methodName = _localctx.name == "main" ? "Main" : _localctx.name;
+			          string parameters = _localctx.paramsStr.Length > 0 ? _localctx.paramsStr.TrimEnd(',', ' ') : "";
+			          _localctx.Csharp =  (_localctx.name == "main" ? "static " : "") + returnType + " " + methodName + "(" + parameters + ")" + Environment.NewLine + "{";
+			      
+			State = 294;
 			ErrorHandler.Sync(this);
 			_la = TokenStream.La(1);
 			while ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << IF) | (1L << FOR) | (1L << MFOR) | (1L << BEGIN) | (1L << WHILE) | (1L << READ) | (1L << READLINE) | (1L << WRITE) | (1L << RETURN) | (1L << ID))) != 0)) {
 				{
 				{
-				State = 321; _localctx._sakhtar = sakhtar();
+				State = 289; _localctx._sakhtar = sakhtar();
 
-											_localctx.D+=Environment.NewLine+_localctx._sakhtar.Csharp;
-											if(_localctx.Type!=_localctx._sakhtar.Type)
-												{
-												if(_localctx.Type=="void"){khata_ezaf_kon("void function can't return something ");}
-												else if(tabdil_noe.tabdil_pazir(_localctx.Type,_localctx._sakhtar.Type))
-												khata_ezaf_kon("the function must return "+_localctx.Type+" but returned "+_localctx._sakhtar.Type);
-												}
-											
+				          _localctx.body += Environment.NewLine + _localctx._sakhtar.Csharp;
+				          if(_localctx.Type != "void" && _localctx.Type != _localctx._sakhtar.Type && _localctx._sakhtar.Type != "void")
+				              khata_ezaf_kon("Function must return " + _localctx.Type + " but returned " + _localctx._sakhtar.Type);
+				      
 				}
 				}
-				State = 328;
+				State = 296;
 				ErrorHandler.Sync(this);
 				_la = TokenStream.La(1);
 			}
-			State = 329; Match(END);
+			State = 297; Match(END);
 
-								//s=s.Remove(s.Length-1);
-								if(_localctx.C.Length!=0)_localctx.C = _localctx.C.Remove(_localctx.C.Length-1);
-								if(_localctx.B=="main")_localctx.Csharp = "static "+_localctx.A+" "+"Main"+"("+_localctx.C+")"+Environment.NewLine+"{"+_localctx.D+Environment.NewLine+"}"+Environment.NewLine;
-								else _localctx.Csharp = _localctx.A+" "+_localctx.B+"("+_localctx.C+")"+Environment.NewLine+"{"+_localctx.D+Environment.NewLine+"}"+Environment.NewLine;
-								Console.Write("@@@ "+_localctx.Csharp+" @@@");
-								SymbolTable.ExitScope();SymbolTable.ExitScope();
-								SymbolTable.AddSymbol((_localctx._ID!=null?_localctx._ID.Text:null).ToLower(),_localctx.Type);
-								
+			          _localctx.Csharp += _localctx.body + Environment.NewLine + "}";
+			          SymbolTable.ExitScope();
+			          SymbolTable.ExitScope();
+			          if (_localctx.name != "main")
+			              SymbolTable.AddSymbol(_localctx.name, _localctx.Type);
+			      
 			}
 		}
 		catch (RecognitionException re) {
@@ -1607,33 +1526,34 @@ public partial class sampleParser : Parser {
 	}
 
 	public partial class EbaratContext : ParserRuleContext {
-		public string Type;
-		public string Csharp;
+		public string Type = "void";
+		public string Csharp = "";
 		public EbaratContext a;
 		public MeghdarContext _meghdar;
 		public EbaratContext b;
 		public GhiasContext _ghias;
-		public ITerminalNode OPL() { return GetToken(sampleParser.OPL, 0); }
-		public ITerminalNode OPR() { return GetToken(sampleParser.OPR, 0); }
+		public ITerminalNode NOT() { return GetToken(sampleParser.NOT, 0); }
 		public EbaratContext[] ebarat() {
 			return GetRuleContexts<EbaratContext>();
 		}
 		public EbaratContext ebarat(int i) {
 			return GetRuleContext<EbaratContext>(i);
 		}
+		public ITerminalNode OPL() { return GetToken(sampleParser.OPL, 0); }
+		public ITerminalNode OPR() { return GetToken(sampleParser.OPR, 0); }
 		public MeghdarContext meghdar() {
 			return GetRuleContext<MeghdarContext>(0);
+		}
+		public ITerminalNode OR() { return GetToken(sampleParser.OR, 0); }
+		public ITerminalNode AND() { return GetToken(sampleParser.AND, 0); }
+		public GhiasContext ghias() {
+			return GetRuleContext<GhiasContext>(0);
 		}
 		public ITerminalNode PLUS() { return GetToken(sampleParser.PLUS, 0); }
 		public ITerminalNode MINUS() { return GetToken(sampleParser.MINUS, 0); }
 		public ITerminalNode MULTIPLIE() { return GetToken(sampleParser.MULTIPLIE, 0); }
 		public ITerminalNode DIVIDE() { return GetToken(sampleParser.DIVIDE, 0); }
 		public ITerminalNode POWER() { return GetToken(sampleParser.POWER, 0); }
-		public ITerminalNode AND() { return GetToken(sampleParser.AND, 0); }
-		public ITerminalNode OR() { return GetToken(sampleParser.OR, 0); }
-		public GhiasContext ghias() {
-			return GetRuleContext<GhiasContext>(0);
-		}
 		public EbaratContext(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
@@ -1665,14 +1585,29 @@ public partial class sampleParser : Parser {
 			int _alt;
 			EnterOuterAlt(_localctx, 1);
 			{
-			State = 341;
+			State = 313;
 			switch (TokenStream.La(1)) {
+			case NOT:
+				{
+				State = 301; Match(NOT);
+				State = 302; _localctx.a = ebarat(2);
+
+				          _localctx.Csharp =  "!" + _localctx.a.Csharp;
+				          if(_localctx.a.Type != "bool")
+				              khata_ezaf_kon("NOT operator requires boolean operand");
+				          _localctx.Type =  "bool";
+				      
+				}
+				break;
 			case OPL:
 				{
-				State = 333; Match(OPL);
-				State = 334; _localctx.a = ebarat(0);
-				State = 335; Match(OPR);
-				_localctx.Csharp = "("+_localctx.a.Csharp+")";_localctx.Type = _localctx.a.Type;
+				State = 305; Match(OPL);
+				State = 306; _localctx.a = ebarat(0);
+				State = 307; Match(OPR);
+
+				          _localctx.Csharp =  "(" + _localctx.a.Csharp + ")";
+				          _localctx.Type =  _localctx.a.Type;
+				      
 				}
 				break;
 			case TRUE:
@@ -1682,38 +1617,40 @@ public partial class sampleParser : Parser {
 			case INTCONST:
 			case STRCONST:
 				{
-				State = 338; _localctx._meghdar = meghdar();
-
-																_localctx.Csharp = _localctx._meghdar.Csharp;
-																_localctx.Type = _localctx._meghdar.Type;
-															 
+				State = 310; _localctx._meghdar = meghdar();
+				_localctx.Csharp =  _localctx._meghdar.Csharp; _localctx.Type =  _localctx._meghdar.Type;
 				}
 				break;
 			default:
 				throw new NoViableAltException(this);
 			}
 			Context.Stop = TokenStream.Lt(-1);
-			State = 389;
+			State = 357;
 			ErrorHandler.Sync(this);
-			_alt = Interpreter.AdaptivePredict(TokenStream,24,Context);
+			_alt = Interpreter.AdaptivePredict(TokenStream,22,Context);
 			while ( _alt!=2 && _alt!=global::Antlr4.Runtime.Atn.ATN.InvalidAltNumber ) {
 				if ( _alt==1 ) {
 					if ( ParseListeners!=null )
 						TriggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					State = 387;
-					switch ( Interpreter.AdaptivePredict(TokenStream,23,Context) ) {
+					State = 355;
+					switch ( Interpreter.AdaptivePredict(TokenStream,21,Context) ) {
 					case 1:
 						{
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 343;
+						State = 315;
 						if (!(Precpred(Context, 11))) throw new FailedPredicateException(this, "Precpred(Context, 11)");
-						State = 344; Match(PLUS);
-						State = 345; _localctx.b = ebarat(12);
-						_localctx.Csharp+=_localctx.a.Csharp+" + "+_localctx.b.Csharp;_localctx.Type =  tabdil_noe.karan_bala(_localctx.a.Type,_localctx.b.Type);
+						State = 316; Match(OR);
+						State = 317; _localctx.b = ebarat(12);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + " || " + _localctx.b.Csharp;
+						                    if(_localctx.a.Type != "bool" || _localctx.b.Type != "bool")
+						                        khata_ezaf_kon("OR operator requires boolean operands");
+						                    _localctx.Type =  "bool";
+						                
 						}
 						break;
 					case 2:
@@ -1721,12 +1658,16 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 348;
+						State = 320;
 						if (!(Precpred(Context, 10))) throw new FailedPredicateException(this, "Precpred(Context, 10)");
-						State = 349; Match(MINUS);
-						State = 350; _localctx.b = ebarat(11);
-						_localctx.Csharp+=_localctx.a.Csharp+" - "+_localctx.b.Csharp;if(!tabdil_noe.tabdil_pazir(_localctx.a.Type,"int")&!tabdil_noe.tabdil_pazir(_localctx.b.Type,"int")){_localctx.Type = "int";}
-						          																else {khata_ezaf_kon("subtraction  not compare with "+_localctx.a.Type+" and "+_localctx.b.Type);_localctx.Type = "no_type";}
+						State = 321; Match(AND);
+						State = 322; _localctx.b = ebarat(11);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + " && " + _localctx.b.Csharp;
+						                    if(_localctx.a.Type != "bool" || _localctx.b.Type != "bool")
+						                        khata_ezaf_kon("AND operator requires boolean operands");
+						                    _localctx.Type =  "bool";
+						                
 						}
 						break;
 					case 3:
@@ -1734,12 +1675,14 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 353;
+						State = 325;
 						if (!(Precpred(Context, 9))) throw new FailedPredicateException(this, "Precpred(Context, 9)");
-						State = 354; Match(MULTIPLIE);
-						State = 355; _localctx.b = ebarat(10);
-						_localctx.Csharp+=_localctx.a.Csharp+" * "+_localctx.b.Csharp;if(!tabdil_noe.tabdil_pazir(_localctx.a.Type,"int")&!tabdil_noe.tabdil_pazir(_localctx.b.Type,"int")){_localctx.Type = "int";}
-						          																 else {khata_ezaf_kon("multiply  not compare with "+_localctx.a.Type+" and "+_localctx.b.Type);_localctx.Type = "no_type";}
+						State = 326; _localctx._ghias = ghias();
+						State = 327; _localctx.b = ebarat(10);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + _localctx._ghias.Csharp + _localctx.b.Csharp;
+						                    _localctx.Type =  "bool";
+						                
 						}
 						break;
 					case 4:
@@ -1747,12 +1690,14 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 358;
+						State = 330;
 						if (!(Precpred(Context, 8))) throw new FailedPredicateException(this, "Precpred(Context, 8)");
-						State = 359; Match(DIVIDE);
-						State = 360; _localctx.b = ebarat(9);
-						_localctx.Csharp+=_localctx.a.Csharp+@" \ "+_localctx.b.Csharp;if(!tabdil_noe.tabdil_pazir(_localctx.a.Type,"int")&!tabdil_noe.tabdil_pazir(_localctx.b.Type,"int")){_localctx.Type = "int";}
-						          																 else {khata_ezaf_kon("subtraction  not compare with "+_localctx.a.Type+" and "+_localctx.b.Type);_localctx.Type = "no_type";}
+						State = 331; Match(PLUS);
+						State = 332; _localctx.b = ebarat(9);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + " + " + _localctx.b.Csharp;
+						                    _localctx.Type =  typeConverter.karan_bala(_localctx.a.Type, _localctx.b.Type);
+						                
 						}
 						break;
 					case 5:
@@ -1760,12 +1705,14 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 363;
-						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
-						State = 364; Match(POWER);
-						State = 365; _localctx.b = ebarat(7);
-						_localctx.Csharp+=_localctx.a.Csharp+" ^ "+_localctx.b.Csharp;if(!tabdil_noe.tabdil_pazir(_localctx.a.Type,"int")&!tabdil_noe.tabdil_pazir(_localctx.b.Type,"int"))_localctx.Type = "int";
-						          															   else {khata_ezaf_kon("power  not compare with "+_localctx.a.Type+" and "+_localctx.b.Type);_localctx.Type = "no_type";}
+						State = 335;
+						if (!(Precpred(Context, 7))) throw new FailedPredicateException(this, "Precpred(Context, 7)");
+						State = 336; Match(MINUS);
+						State = 337; _localctx.b = ebarat(8);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + " - " + _localctx.b.Csharp;
+						                    _localctx.Type =  typeConverter.karan_bala(_localctx.a.Type, _localctx.b.Type);
+						                
 						}
 						break;
 					case 6:
@@ -1773,23 +1720,14 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 368;
-						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
-						State = 369; Match(AND);
-						State = 370; _localctx.b = ebarat(6);
-							
-						          											_localctx.Csharp+=_localctx.a.Csharp+" & "+_localctx.b.Csharp;
-						          											if(tabdil_noe.tabdil_pazir(_localctx.a.Type,"bool"))
-						          											{
-						          											khata_ezaf_kon("AND operator can't use for "+_localctx.a.Type+" type");
-						          											_localctx.Type = "no_type";
-						          											}
-						          											if(tabdil_noe.tabdil_pazir(_localctx.b.Type,"bool" ))
-						          											{
-						          											khata_ezaf_kon("AND operator can't use for "+_localctx.b.Type+" type");
-						          											_localctx.Type = "no_type";
-						          											}
-						          										
+						State = 340;
+						if (!(Precpred(Context, 6))) throw new FailedPredicateException(this, "Precpred(Context, 6)");
+						State = 341; Match(MULTIPLIE);
+						State = 342; _localctx.b = ebarat(7);
+
+						                    _localctx.Csharp =  _localctx.a.Csharp + " * " + _localctx.b.Csharp;
+						                    _localctx.Type =  typeConverter.karan_bala(_localctx.a.Type, _localctx.b.Type);
+						                
 						}
 						break;
 					case 7:
@@ -1797,24 +1735,14 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 373;
-						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
-						State = 374; Match(OR);
-						State = 375; _localctx.b = ebarat(5);
+						State = 345;
+						if (!(Precpred(Context, 5))) throw new FailedPredicateException(this, "Precpred(Context, 5)");
+						State = 346; Match(DIVIDE);
+						State = 347; _localctx.b = ebarat(6);
 
-						          											_localctx.Csharp+=_localctx.a.Csharp+" | "+_localctx.b.Csharp;
-						          											if(tabdil_noe.tabdil_pazir(_localctx.a.Type,"bool"))
-						          											{
-						          											
-						          											khata_ezaf_kon("OR operator can't use for "+_localctx.a.Type+" type");
-						          											_localctx.Type = "no_type";
-						          											}
-						          											if(tabdil_noe.tabdil_pazir(_localctx.b.Type,"bool" ))
-						          											{
-						          											khata_ezaf_kon("OR operator can't use for "+_localctx.b.Type+" type");
-						          											_localctx.Type = "no_type";
-						          											}
-						          										
+						                    _localctx.Csharp =  _localctx.a.Csharp + " / " + _localctx.b.Csharp;
+						                    _localctx.Type =  typeConverter.karan_bala(_localctx.a.Type, _localctx.b.Type);
+						                
 						}
 						break;
 					case 8:
@@ -1822,38 +1750,22 @@ public partial class sampleParser : Parser {
 						_localctx = new EbaratContext(_parentctx, _parentState);
 						_localctx.a = _prevctx;
 						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 378;
-						if (!(Precpred(Context, 3))) throw new FailedPredicateException(this, "Precpred(Context, 3)");
-						State = 379; _localctx._ghias = ghias();
-						State = 380; _localctx.b = ebarat(4);
-						}
-						break;
-					case 9:
-						{
-						_localctx = new EbaratContext(_parentctx, _parentState);
-						_localctx.a = _prevctx;
-						PushNewRecursionContext(_localctx, _startState, RULE_ebarat);
-						State = 382;
-						if (!(Precpred(Context, 2))) throw new FailedPredicateException(this, "Precpred(Context, 2)");
-						State = 383; Match(OR);
-						State = 384; _localctx.b = ebarat(3);
+						State = 350;
+						if (!(Precpred(Context, 4))) throw new FailedPredicateException(this, "Precpred(Context, 4)");
+						State = 351; Match(POWER);
+						State = 352; _localctx.b = ebarat(5);
 
-						          											_localctx.Csharp+=_localctx.a.Csharp+_localctx._ghias.Csharp+_localctx.b.Csharp;
-						          											if(tabdil_noe.tabdil_pazir(_localctx.a.Type,"bool")|tabdil_noe.tabdil_pazir(_localctx.b.Type,"bool"))
-						          											{
-						          											
-						          											khata_ezaf_kon("can not compare between "+_localctx.a.Type+" and "+_localctx.b.Type);
-						          											_localctx.Type = "no_type";
-						          											}
-						          										
+						                    _localctx.Csharp =  "Math.Pow(" + _localctx.a.Csharp + ", " + _localctx.b.Csharp + ")";
+						                    _localctx.Type =  "double";
+						                
 						}
 						break;
 					}
 					} 
 				}
-				State = 391;
+				State = 359;
 				ErrorHandler.Sync(this);
-				_alt = Interpreter.AdaptivePredict(TokenStream,24,Context);
+				_alt = Interpreter.AdaptivePredict(TokenStream,22,Context);
 			}
 			}
 		}
@@ -1880,171 +1792,156 @@ public partial class sampleParser : Parser {
 		case 1: return Precpred(Context, 10);
 		case 2: return Precpred(Context, 9);
 		case 3: return Precpred(Context, 8);
-		case 4: return Precpred(Context, 6);
-		case 5: return Precpred(Context, 5);
-		case 6: return Precpred(Context, 4);
-		case 7: return Precpred(Context, 3);
-		case 8: return Precpred(Context, 2);
+		case 4: return Precpred(Context, 7);
+		case 5: return Precpred(Context, 6);
+		case 6: return Precpred(Context, 5);
+		case 7: return Precpred(Context, 4);
 		}
 		return true;
 	}
 
 	public static readonly string _serializedATN =
-		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3:\x18B\x4\x2\t\x2"+
-		"\x4\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x4\a\t\a\x4\b\t\b\x4\t\t"+
-		"\t\x4\n\t\n\x4\v\t\v\x4\f\t\f\x4\r\t\r\x4\xE\t\xE\x4\xF\t\xF\x4\x10\t"+
-		"\x10\x4\x11\t\x11\x3\x2\x3\x2\x3\x2\x3\x2\x3\x2\x3\x2\a\x2)\n\x2\f\x2"+
-		"\xE\x2,\v\x2\x3\x2\x3\x2\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3"+
-		"\x3\x3\x3\x3\x3\x3\x3\x3\x3\x5\x3<\n\x3\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4"+
-		"\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x5\x4M\n"+
-		"\x4\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5"+
-		"\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x5\x5\x63\n\x5"+
-		"\x3\x6\x3\x6\x3\x6\x3\x6\x3\x6\x3\x6\x3\a\x3\a\x3\a\x3\a\x3\a\a\ap\n\a"+
-		"\f\a\xE\as\v\a\x3\a\x3\a\x3\a\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b"+
-		"\x3\b\x3\b\a\b\x82\n\b\f\b\xE\b\x85\v\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b"+
-		"\a\b\x8D\n\b\f\b\xE\b\x90\v\b\x3\b\x3\b\x5\b\x94\n\b\x3\t\x3\t\x3\t\x3"+
-		"\t\x3\t\x3\t\x3\t\a\t\x9D\n\t\f\t\xE\t\xA0\v\t\x3\t\x3\t\x3\t\x3\n\x3"+
-		"\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x5\n\xAF\n\n\x3\n\x3\n\x3\n"+
-		"\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\a\n\xBB\n\n\f\n\xE\n\xBE\v\n\x3\n"+
-		"\x3\n\x3\n\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x5\v"+
-		"\xCE\n\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\a\v\xDA\n\v"+
-		"\f\v\xE\v\xDD\v\v\x3\v\x3\v\x3\v\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f\x3"+
-		"\f\x3\f\x3\f\x5\f\xEC\n\f\x3\r\x3\r\x3\r\x3\r\x3\r\x3\r\x3\xE\x3\xE\x3"+
-		"\xE\x3\xE\x3\xE\x3\xE\x3\xE\x3\xE\x3\xE\a\xE\xFD\n\xE\f\xE\xE\xE\x100"+
-		"\v\xE\x5\xE\x102\n\xE\x3\xE\x3\xE\x3\xE\x3\xE\x3\xF\x3\xF\x3\xF\x3\xF"+
-		"\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3"+
+		"\x3\x430\xD6D1\x8206\xAD2D\x4417\xAEF1\x8D80\xAADD\x3\x39\x16B\x4\x2\t"+
+		"\x2\x4\x3\t\x3\x4\x4\t\x4\x4\x5\t\x5\x4\x6\t\x6\x4\a\t\a\x4\b\t\b\x4\t"+
+		"\t\t\x4\n\t\n\x4\v\t\v\x4\f\t\f\x4\r\t\r\x4\xE\t\xE\x4\xF\t\xF\x4\x10"+
+		"\t\x10\x4\x11\t\x11\x3\x2\x3\x2\x3\x2\a\x2&\n\x2\f\x2\xE\x2)\v\x2\x3\x2"+
+		"\x3\x2\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3\x3"+
+		"\x3\x3\x3\x5\x3\x39\n\x3\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3"+
+		"\x4\x3\x4\x3\x4\x3\x4\x3\x4\x3\x4\x5\x4H\n\x4\x3\x5\x3\x5\x3\x5\x3\x5"+
+		"\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3\x5\x3"+
+		"\x5\x3\x5\x3\x5\x3\x5\x3\x5\x5\x5^\n\x5\x3\x6\x3\x6\x3\x6\x3\x6\x3\x6"+
+		"\x3\x6\x3\a\x3\a\x3\a\x3\a\x3\a\a\ak\n\a\f\a\xE\an\v\a\x3\a\x3\a\x3\a"+
+		"\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\a\b|\n\b\f\b\xE\b\x7F\v"+
+		"\b\x3\b\x3\b\x3\b\x3\b\x3\b\x3\b\a\b\x87\n\b\f\b\xE\b\x8A\v\b\x3\b\x3"+
+		"\b\x5\b\x8E\n\b\x3\t\x3\t\x3\t\x3\t\x3\t\x3\t\x3\t\a\t\x97\n\t\f\t\xE"+
+		"\t\x9A\v\t\x3\t\x3\t\x3\t\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n\x3\n"+
+		"\x3\n\x3\n\x3\n\a\n\xAB\n\n\f\n\xE\n\xAE\v\n\x3\n\x3\n\x3\n\x3\v\x3\v"+
+		"\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\x3\v\a\v\xBF\n\v\f\v\xE"+
+		"\v\xC2\v\v\x3\v\x3\v\x3\v\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f\x3\f"+
+		"\x3\f\x5\f\xD1\n\f\x3\r\x3\r\x3\r\x3\r\x3\r\x3\r\x3\xE\x3\xE\x3\xE\x3"+
+		"\xE\x3\xE\a\xE\xDE\n\xE\f\xE\xE\xE\xE1\v\xE\x5\xE\xE3\n\xE\x3\xE\x3\xE"+
+		"\x3\xE\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3"+
 		"\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF"+
-		"\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x5\xF\x12A\n\xF\x3\x10\x3\x10"+
-		"\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x6\x10\x134\n\x10\r\x10\xE"+
-		"\x10\x135\x5\x10\x138\n\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10"+
-		"\x5\x10\x140\n\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\a\x10\x147\n\x10"+
-		"\f\x10\xE\x10\x14A\v\x10\x3\x10\x3\x10\x3\x10\x3\x11\x3\x11\x3\x11\x3"+
-		"\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x5\x11\x158\n\x11\x3\x11\x3\x11"+
+		"\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3\xF\x3"+
+		"\xF\x5\xF\x10A\n\xF\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3\x10\x3"+
+		"\x10\x6\x10\x114\n\x10\r\x10\xE\x10\x115\x5\x10\x118\n\x10\x3\x10\x3\x10"+
+		"\x3\x10\x3\x10\x3\x10\x3\x10\x5\x10\x120\n\x10\x3\x10\x3\x10\x3\x10\x3"+
+		"\x10\x3\x10\a\x10\x127\n\x10\f\x10\xE\x10\x12A\v\x10\x3\x10\x3\x10\x3"+
+		"\x10\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3"+
+		"\x11\x3\x11\x3\x11\x3\x11\x5\x11\x13C\n\x11\x3\x11\x3\x11\x3\x11\x3\x11"+
 		"\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11"+
 		"\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11"+
 		"\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11"+
-		"\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11"+
-		"\x3\x11\x3\x11\a\x11\x186\n\x11\f\x11\xE\x11\x189\v\x11\x3\x11\x2\x3 "+
-		"\x12\x2\x4\x6\b\n\f\xE\x10\x12\x14\x16\x18\x1A\x1C\x1E \x2\x2\x1B3\x2"+
-		"*\x3\x2\x2\x2\x4;\x3\x2\x2\x2\x6L\x3\x2\x2\x2\b\x62\x3\x2\x2\x2\n\x64"+
-		"\x3\x2\x2\x2\fj\x3\x2\x2\x2\xEw\x3\x2\x2\x2\x10\x95\x3\x2\x2\x2\x12\xA4"+
-		"\x3\x2\x2\x2\x14\xC2\x3\x2\x2\x2\x16\xEB\x3\x2\x2\x2\x18\xED\x3\x2\x2"+
-		"\x2\x1A\xF3\x3\x2\x2\x2\x1C\x129\x3\x2\x2\x2\x1E\x12B\x3\x2\x2\x2 \x157"+
-		"\x3\x2\x2\x2\"#\x5\x1E\x10\x2#$\b\x2\x1\x2$)\x3\x2\x2\x2%&\x5\x18\r\x2"+
-		"&\'\b\x2\x1\x2\')\x3\x2\x2\x2(\"\x3\x2\x2\x2(%\x3\x2\x2\x2),\x3\x2\x2"+
-		"\x2*(\x3\x2\x2\x2*+\x3\x2\x2\x2+-\x3\x2\x2\x2,*\x3\x2\x2\x2-.\a\x2\x2"+
-		"\x3.\x3\x3\x2\x2\x2/\x30\a)\x2\x2\x30<\b\x3\x1\x2\x31\x32\a*\x2\x2\x32"+
-		"<\b\x3\x1\x2\x33\x34\a+\x2\x2\x34<\b\x3\x1\x2\x35\x36\a,\x2\x2\x36<\b"+
-		"\x3\x1\x2\x37\x38\a.\x2\x2\x38<\b\x3\x1\x2\x39:\a-\x2\x2:<\b\x3\x1\x2"+
-		";/\x3\x2\x2\x2;\x31\x3\x2\x2\x2;\x33\x3\x2\x2\x2;\x35\x3\x2\x2\x2;\x37"+
-		"\x3\x2\x2\x2;\x39\x3\x2\x2\x2<\x5\x3\x2\x2\x2=>\a\x32\x2\x2>M\b\x4\x1"+
-		"\x2?@\a\x35\x2\x2@M\b\x4\x1\x2\x41\x42\a\x34\x2\x2\x42M\b\x4\x1\x2\x43"+
-		"\x44\x5\x1A\xE\x2\x44\x45\b\x4\x1\x2\x45M\x3\x2\x2\x2\x46G\a\x37\x2\x2"+
-		"GM\b\x4\x1\x2HI\a\x19\x2\x2IM\b\x4\x1\x2JK\a\x1A\x2\x2KM\b\x4\x1\x2L="+
-		"\x3\x2\x2\x2L?\x3\x2\x2\x2L\x41\x3\x2\x2\x2L\x43\x3\x2\x2\x2L\x46\x3\x2"+
-		"\x2\x2LH\x3\x2\x2\x2LJ\x3\x2\x2\x2M\a\x3\x2\x2\x2NO\a\x14\x2\x2OP\a\x1C"+
-		"\x2\x2PQ\x5 \x11\x2QR\b\x5\x1\x2RS\a\x1D\x2\x2S\x63\x3\x2\x2\x2TU\a\x12"+
-		"\x2\x2UV\a\x1C\x2\x2VW\a\x32\x2\x2WX\b\x5\x1\x2X\x63\a\x1D\x2\x2YZ\a\x13"+
-		"\x2\x2Z[\a\x1C\x2\x2[\\\a\x32\x2\x2\\]\b\x5\x1\x2]\x63\a\x1D\x2\x2^_\a"+
-		"\x12\x2\x2_`\a\x1C\x2\x2`\x61\b\x5\x1\x2\x61\x63\a\x1D\x2\x2\x62N\x3\x2"+
-		"\x2\x2\x62T\x3\x2\x2\x2\x62Y\x3\x2\x2\x2\x62^\x3\x2\x2\x2\x63\t\x3\x2"+
-		"\x2\x2\x64\x65\a\x32\x2\x2\x65\x66\a!\x2\x2\x66g\x5 \x11\x2gh\b\x6\x1"+
-		"\x2hi\a\x31\x2\x2i\v\x3\x2\x2\x2jk\a\xE\x2\x2kq\b\a\x1\x2lm\x5\x1C\xF"+
-		"\x2mn\b\a\x1\x2np\x3\x2\x2\x2ol\x3\x2\x2\x2ps\x3\x2\x2\x2qo\x3\x2\x2\x2"+
-		"qr\x3\x2\x2\x2rt\x3\x2\x2\x2sq\x3\x2\x2\x2tu\a\xF\x2\x2uv\b\a\x1\x2v\r"+
-		"\x3\x2\x2\x2wx\a\b\x2\x2xy\x5 \x11\x2yz\b\b\x1\x2z{\a\r\x2\x2{|\x5\f\a"+
-		"\x2|\x83\b\b\x1\x2}~\a\x11\x2\x2~\x7F\x5\xE\b\x2\x7F\x80\b\b\x1\x2\x80"+
-		"\x82\x3\x2\x2\x2\x81}\x3\x2\x2\x2\x82\x85\x3\x2\x2\x2\x83\x81\x3\x2\x2"+
-		"\x2\x83\x84\x3\x2\x2\x2\x84\x93\x3\x2\x2\x2\x85\x83\x3\x2\x2\x2\x86\x87"+
-		"\a\x11\x2\x2\x87\x88\a\xE\x2\x2\x88\x8E\b\b\x1\x2\x89\x8A\x5\x1C\xF\x2"+
-		"\x8A\x8B\b\b\x1\x2\x8B\x8D\x3\x2\x2\x2\x8C\x89\x3\x2\x2\x2\x8D\x90\x3"+
-		"\x2\x2\x2\x8E\x8C\x3\x2\x2\x2\x8E\x8F\x3\x2\x2\x2\x8F\x91\x3\x2\x2\x2"+
-		"\x90\x8E\x3\x2\x2\x2\x91\x92\a\xF\x2\x2\x92\x94\b\b\x1\x2\x93\x86\x3\x2"+
-		"\x2\x2\x93\x94\x3\x2\x2\x2\x94\xF\x3\x2\x2\x2\x95\x96\a\x10\x2\x2\x96"+
-		"\x97\x5 \x11\x2\x97\x98\b\t\x1\x2\x98\x9E\a\xE\x2\x2\x99\x9A\x5\x1C\xF"+
-		"\x2\x9A\x9B\b\t\x1\x2\x9B\x9D\x3\x2\x2\x2\x9C\x99\x3\x2\x2\x2\x9D\xA0"+
-		"\x3\x2\x2\x2\x9E\x9C\x3\x2\x2\x2\x9E\x9F\x3\x2\x2\x2\x9F\xA1\x3\x2\x2"+
-		"\x2\xA0\x9E\x3\x2\x2\x2\xA1\xA2\a\xF\x2\x2\xA2\xA3\b\t\x1\x2\xA3\x11\x3"+
-		"\x2\x2\x2\xA4\xA5\a\n\x2\x2\xA5\xAE\b\n\x1\x2\xA6\xA7\a\x32\x2\x2\xA7"+
-		"\xAF\b\n\x1\x2\xA8\xA9\x5\x18\r\x2\xA9\xAA\b\n\x1\x2\xAA\xAF\x3\x2\x2"+
-		"\x2\xAB\xAC\x5\n\x6\x2\xAC\xAD\b\n\x1\x2\xAD\xAF\x3\x2\x2\x2\xAE\xA6\x3"+
-		"\x2\x2\x2\xAE\xA8\x3\x2\x2\x2\xAE\xAB\x3\x2\x2\x2\xAF\xB0\x3\x2\x2\x2"+
-		"\xB0\xB1\b\n\x1\x2\xB1\xB2\a\t\x2\x2\xB2\xB3\x5 \x11\x2\xB3\xB4\b\n\x1"+
-		"\x2\xB4\xB5\a\r\x2\x2\xB5\xB6\a\xE\x2\x2\xB6\xBC\b\n\x1\x2\xB7\xB8\x5"+
-		"\x1C\xF\x2\xB8\xB9\b\n\x1\x2\xB9\xBB\x3\x2\x2\x2\xBA\xB7\x3\x2\x2\x2\xBB"+
-		"\xBE\x3\x2\x2\x2\xBC\xBA\x3\x2\x2\x2\xBC\xBD\x3\x2\x2\x2\xBD\xBF\x3\x2"+
-		"\x2\x2\xBE\xBC\x3\x2\x2\x2\xBF\xC0\a\xF\x2\x2\xC0\xC1\b\n\x1\x2\xC1\x13"+
-		"\x3\x2\x2\x2\xC2\xC3\a\v\x2\x2\xC3\xCD\b\v\x1\x2\xC4\xC5\a\x32\x2\x2\xC5"+
-		"\xCE\b\v\x1\x2\xC6\xC7\x5\x18\r\x2\xC7\xC8\b\v\x1\x2\xC8\xCE\x3\x2\x2"+
-		"\x2\xC9\xCE\x3\x2\x2\x2\xCA\xCB\x5\n\x6\x2\xCB\xCC\b\v\x1\x2\xCC\xCE\x3"+
-		"\x2\x2\x2\xCD\xC4\x3\x2\x2\x2\xCD\xC6\x3\x2\x2\x2\xCD\xC9\x3\x2\x2\x2"+
-		"\xCD\xCA\x3\x2\x2\x2\xCE\xCF\x3\x2\x2\x2\xCF\xD0\b\v\x1\x2\xD0\xD1\a\t"+
-		"\x2\x2\xD1\xD2\x5 \x11\x2\xD2\xD3\b\v\x1\x2\xD3\xD4\a\r\x2\x2\xD4\xD5"+
-		"\a\xE\x2\x2\xD5\xDB\b\v\x1\x2\xD6\xD7\x5\x1C\xF\x2\xD7\xD8\b\v\x1\x2\xD8"+
-		"\xDA\x3\x2\x2\x2\xD9\xD6\x3\x2\x2\x2\xDA\xDD\x3\x2\x2\x2\xDB\xD9\x3\x2"+
-		"\x2\x2\xDB\xDC\x3\x2\x2\x2\xDC\xDE\x3\x2\x2\x2\xDD\xDB\x3\x2\x2\x2\xDE"+
-		"\xDF\a\xF\x2\x2\xDF\xE0\b\v\x1\x2\xE0\x15\x3\x2\x2\x2\xE1\xE2\a\x3\x2"+
-		"\x2\xE2\xEC\b\f\x1\x2\xE3\xE4\a\x4\x2\x2\xE4\xEC\b\f\x1\x2\xE5\xE6\a\x5"+
-		"\x2\x2\xE6\xEC\b\f\x1\x2\xE7\xE8\a\x5\x2\x2\xE8\xEC\b\f\x1\x2\xE9\xEA"+
-		"\a\x5\x2\x2\xEA\xEC\b\f\x1\x2\xEB\xE1\x3\x2\x2\x2\xEB\xE3\x3\x2\x2\x2"+
-		"\xEB\xE5\x3\x2\x2\x2\xEB\xE7\x3\x2\x2\x2\xEB\xE9\x3\x2\x2\x2\xEC\x17\x3"+
-		"\x2\x2\x2\xED\xEE\a\x32\x2\x2\xEE\xEF\a\x30\x2\x2\xEF\xF0\x5\x16\f\x2"+
-		"\xF0\xF1\a\x31\x2\x2\xF1\xF2\b\r\x1\x2\xF2\x19\x3\x2\x2\x2\xF3\xF4\a\x32"+
-		"\x2\x2\xF4\xF5\b\xE\x1\x2\xF5\x101\a\x1C\x2\x2\xF6\xF7\x5 \x11\x2\xF7"+
-		"\xFE\b\xE\x1\x2\xF8\xF9\a:\x2\x2\xF9\xFA\x5 \x11\x2\xFA\xFB\b\xE\x1\x2"+
-		"\xFB\xFD\x3\x2\x2\x2\xFC\xF8\x3\x2\x2\x2\xFD\x100\x3\x2\x2\x2\xFE\xFC"+
-		"\x3\x2\x2\x2\xFE\xFF\x3\x2\x2\x2\xFF\x102\x3\x2\x2\x2\x100\xFE\x3\x2\x2"+
-		"\x2\x101\xF6\x3\x2\x2\x2\x101\x102\x3\x2\x2\x2\x102\x103\x3\x2\x2\x2\x103"+
-		"\x104\b\xE\x1\x2\x104\x105\a\x1D\x2\x2\x105\x106\b\xE\x1\x2\x106\x1B\x3"+
-		"\x2\x2\x2\x107\x108\x5\n\x6\x2\x108\x109\b\xF\x1\x2\x109\x12A\x3\x2\x2"+
-		"\x2\x10A\x10B\a\x18\x2\x2\x10B\x10C\x5 \x11\x2\x10C\x10D\a\x31\x2\x2\x10D"+
-		"\x10E\b\xF\x1\x2\x10E\x12A\x3\x2\x2\x2\x10F\x110\x5\xE\b\x2\x110\x111"+
-		"\b\xF\x1\x2\x111\x12A\x3\x2\x2\x2\x112\x113\x5\x10\t\x2\x113\x114\b\xF"+
-		"\x1\x2\x114\x12A\x3\x2\x2\x2\x115\x116\x5\x1A\xE\x2\x116\x117\a\x31\x2"+
-		"\x2\x117\x118\b\xF\x1\x2\x118\x12A\x3\x2\x2\x2\x119\x11A\x5\b\x5\x2\x11A"+
-		"\x11B\a\x31\x2\x2\x11B\x11C\b\xF\x1\x2\x11C\x12A\x3\x2\x2\x2\x11D\x11E"+
-		"\x5\x18\r\x2\x11E\x11F\b\xF\x1\x2\x11F\x12A\x3\x2\x2\x2\x120\x121\x5\x12"+
-		"\n\x2\x121\x122\b\xF\x1\x2\x122\x12A\x3\x2\x2\x2\x123\x124\x5\x14\v\x2"+
-		"\x124\x125\b\xF\x1\x2\x125\x12A\x3\x2\x2\x2\x126\x127\x5\f\a\x2\x127\x128"+
-		"\b\xF\x1\x2\x128\x12A\x3\x2\x2\x2\x129\x107\x3\x2\x2\x2\x129\x10A\x3\x2"+
-		"\x2\x2\x129\x10F\x3\x2\x2\x2\x129\x112\x3\x2\x2\x2\x129\x115\x3\x2\x2"+
-		"\x2\x129\x119\x3\x2\x2\x2\x129\x11D\x3\x2\x2\x2\x129\x120\x3\x2\x2\x2"+
-		"\x129\x123\x3\x2\x2\x2\x129\x126\x3\x2\x2\x2\x12A\x1D\x3\x2\x2\x2\x12B"+
-		"\x12C\a\x15\x2\x2\x12C\x12D\a\x32\x2\x2\x12D\x137\b\x10\x1\x2\x12E\x12F"+
-		"\a\x16\x2\x2\x12F\x133\a\x30\x2\x2\x130\x131\x5\x18\r\x2\x131\x132\b\x10"+
-		"\x1\x2\x132\x134\x3\x2\x2\x2\x133\x130\x3\x2\x2\x2\x134\x135\x3\x2\x2"+
-		"\x2\x135\x133\x3\x2\x2\x2\x135\x136\x3\x2\x2\x2\x136\x138\x3\x2\x2\x2"+
-		"\x137\x12E\x3\x2\x2\x2\x137\x138\x3\x2\x2\x2\x138\x13F\x3\x2\x2\x2\x139"+
-		"\x13A\a\x17\x2\x2\x13A\x13B\a\x30\x2\x2\x13B\x13C\x5\x16\f\x2\x13C\x13D"+
-		"\a\x31\x2\x2\x13D\x13E\b\x10\x1\x2\x13E\x140\x3\x2\x2\x2\x13F\x139\x3"+
-		"\x2\x2\x2\x13F\x140\x3\x2\x2\x2\x140\x141\x3\x2\x2\x2\x141\x142\a\xE\x2"+
-		"\x2\x142\x148\b\x10\x1\x2\x143\x144\x5\x1C\xF\x2\x144\x145\b\x10\x1\x2"+
-		"\x145\x147\x3\x2\x2\x2\x146\x143\x3\x2\x2\x2\x147\x14A\x3\x2\x2\x2\x148"+
-		"\x146\x3\x2\x2\x2\x148\x149\x3\x2\x2\x2\x149\x14B\x3\x2\x2\x2\x14A\x148"+
-		"\x3\x2\x2\x2\x14B\x14C\a\xF\x2\x2\x14C\x14D\b\x10\x1\x2\x14D\x1F\x3\x2"+
-		"\x2\x2\x14E\x14F\b\x11\x1\x2\x14F\x150\a\x1C\x2\x2\x150\x151\x5 \x11\x2"+
-		"\x151\x152\a\x1D\x2\x2\x152\x153\b\x11\x1\x2\x153\x158\x3\x2\x2\x2\x154"+
-		"\x155\x5\x6\x4\x2\x155\x156\b\x11\x1\x2\x156\x158\x3\x2\x2\x2\x157\x14E"+
-		"\x3\x2\x2\x2\x157\x154\x3\x2\x2\x2\x158\x187\x3\x2\x2\x2\x159\x15A\f\r"+
-		"\x2\x2\x15A\x15B\a\x1B\x2\x2\x15B\x15C\x5 \x11\xE\x15C\x15D\b\x11\x1\x2"+
-		"\x15D\x186\x3\x2\x2\x2\x15E\x15F\f\f\x2\x2\x15F\x160\a\x1E\x2\x2\x160"+
-		"\x161\x5 \x11\r\x161\x162\b\x11\x1\x2\x162\x186\x3\x2\x2\x2\x163\x164"+
-		"\f\v\x2\x2\x164\x165\a\x1F\x2\x2\x165\x166\x5 \x11\f\x166\x167\b\x11\x1"+
-		"\x2\x167\x186\x3\x2\x2\x2\x168\x169\f\n\x2\x2\x169\x16A\a \x2\x2\x16A"+
-		"\x16B\x5 \x11\v\x16B\x16C\b\x11\x1\x2\x16C\x186\x3\x2\x2\x2\x16D\x16E"+
-		"\f\b\x2\x2\x16E\x16F\a$\x2\x2\x16F\x170\x5 \x11\t\x170\x171\b\x11\x1\x2"+
-		"\x171\x186\x3\x2\x2\x2\x172\x173\f\a\x2\x2\x173\x174\a%\x2\x2\x174\x175"+
-		"\x5 \x11\b\x175\x176\b\x11\x1\x2\x176\x186\x3\x2\x2\x2\x177\x178\f\x6"+
-		"\x2\x2\x178\x179\a&\x2\x2\x179\x17A\x5 \x11\a\x17A\x17B\b\x11\x1\x2\x17B"+
-		"\x186\x3\x2\x2\x2\x17C\x17D\f\x5\x2\x2\x17D\x17E\x5\x4\x3\x2\x17E\x17F"+
-		"\x5 \x11\x6\x17F\x186\x3\x2\x2\x2\x180\x181\f\x4\x2\x2\x181\x182\a&\x2"+
-		"\x2\x182\x183\x5 \x11\x5\x183\x184\b\x11\x1\x2\x184\x186\x3\x2\x2\x2\x185"+
-		"\x159\x3\x2\x2\x2\x185\x15E\x3\x2\x2\x2\x185\x163\x3\x2\x2\x2\x185\x168"+
-		"\x3\x2\x2\x2\x185\x16D\x3\x2\x2\x2\x185\x172\x3\x2\x2\x2\x185\x177\x3"+
-		"\x2\x2\x2\x185\x17C\x3\x2\x2\x2\x185\x180\x3\x2\x2\x2\x186\x189\x3\x2"+
-		"\x2\x2\x187\x185\x3\x2\x2\x2\x187\x188\x3\x2\x2\x2\x188!\x3\x2\x2\x2\x189"+
-		"\x187\x3\x2\x2\x2\x1B(*;L\x62q\x83\x8E\x93\x9E\xAE\xBC\xCD\xDB\xEB\xFE"+
-		"\x101\x129\x135\x137\x13F\x148\x157\x185\x187";
+		"\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\x3\x11\a\x11\x166\n\x11\f\x11\xE\x11"+
+		"\x169\v\x11\x3\x11\x2\x3 \x12\x2\x4\x6\b\n\f\xE\x10\x12\x14\x16\x18\x1A"+
+		"\x1C\x1E \x2\x2\x18F\x2\'\x3\x2\x2\x2\x4\x38\x3\x2\x2\x2\x6G\x3\x2\x2"+
+		"\x2\b]\x3\x2\x2\x2\n_\x3\x2\x2\x2\f\x65\x3\x2\x2\x2\xEr\x3\x2\x2\x2\x10"+
+		"\x8F\x3\x2\x2\x2\x12\x9E\x3\x2\x2\x2\x14\xB2\x3\x2\x2\x2\x16\xD0\x3\x2"+
+		"\x2\x2\x18\xD2\x3\x2\x2\x2\x1A\xD8\x3\x2\x2\x2\x1C\x109\x3\x2\x2\x2\x1E"+
+		"\x10B\x3\x2\x2\x2 \x13B\x3\x2\x2\x2\"&\x5\x1E\x10\x2#&\x5\x18\r\x2$&\x5"+
+		"\x1C\xF\x2%\"\x3\x2\x2\x2%#\x3\x2\x2\x2%$\x3\x2\x2\x2&)\x3\x2\x2\x2\'"+
+		"%\x3\x2\x2\x2\'(\x3\x2\x2\x2(*\x3\x2\x2\x2)\'\x3\x2\x2\x2*+\a\x2\x2\x3"+
+		"+\x3\x3\x2\x2\x2,-\a)\x2\x2-\x39\b\x3\x1\x2./\a*\x2\x2/\x39\b\x3\x1\x2"+
+		"\x30\x31\a+\x2\x2\x31\x39\b\x3\x1\x2\x32\x33\a,\x2\x2\x33\x39\b\x3\x1"+
+		"\x2\x34\x35\a.\x2\x2\x35\x39\b\x3\x1\x2\x36\x37\a-\x2\x2\x37\x39\b\x3"+
+		"\x1\x2\x38,\x3\x2\x2\x2\x38.\x3\x2\x2\x2\x38\x30\x3\x2\x2\x2\x38\x32\x3"+
+		"\x2\x2\x2\x38\x34\x3\x2\x2\x2\x38\x36\x3\x2\x2\x2\x39\x5\x3\x2\x2\x2:"+
+		";\a\x32\x2\x2;H\b\x4\x1\x2<=\a\x35\x2\x2=H\b\x4\x1\x2>?\a\x34\x2\x2?H"+
+		"\b\x4\x1\x2@\x41\a\x37\x2\x2\x41H\b\x4\x1\x2\x42\x43\a\x19\x2\x2\x43H"+
+		"\b\x4\x1\x2\x44\x45\a\x1A\x2\x2\x45H\b\x4\x1\x2\x46H\x5\x1A\xE\x2G:\x3"+
+		"\x2\x2\x2G<\x3\x2\x2\x2G>\x3\x2\x2\x2G@\x3\x2\x2\x2G\x42\x3\x2\x2\x2G"+
+		"\x44\x3\x2\x2\x2G\x46\x3\x2\x2\x2H\a\x3\x2\x2\x2IJ\a\x14\x2\x2JK\a\x1C"+
+		"\x2\x2KL\x5 \x11\x2LM\a\x1D\x2\x2MN\b\x5\x1\x2N^\x3\x2\x2\x2OP\a\x12\x2"+
+		"\x2PQ\a\x1C\x2\x2QR\a\x32\x2\x2RS\a\x1D\x2\x2S^\b\x5\x1\x2TU\a\x13\x2"+
+		"\x2UV\a\x1C\x2\x2VW\a\x32\x2\x2WX\a\x1D\x2\x2X^\b\x5\x1\x2YZ\a\x12\x2"+
+		"\x2Z[\a\x1C\x2\x2[\\\a\x1D\x2\x2\\^\b\x5\x1\x2]I\x3\x2\x2\x2]O\x3\x2\x2"+
+		"\x2]T\x3\x2\x2\x2]Y\x3\x2\x2\x2^\t\x3\x2\x2\x2_`\a\x32\x2\x2`\x61\a!\x2"+
+		"\x2\x61\x62\x5 \x11\x2\x62\x63\a\x30\x2\x2\x63\x64\b\x6\x1\x2\x64\v\x3"+
+		"\x2\x2\x2\x65\x66\a\xE\x2\x2\x66l\b\a\x1\x2gh\x5\x1C\xF\x2hi\b\a\x1\x2"+
+		"ik\x3\x2\x2\x2jg\x3\x2\x2\x2kn\x3\x2\x2\x2lj\x3\x2\x2\x2lm\x3\x2\x2\x2"+
+		"mo\x3\x2\x2\x2nl\x3\x2\x2\x2op\a\xF\x2\x2pq\b\a\x1\x2q\r\x3\x2\x2\x2r"+
+		"s\a\b\x2\x2st\x5 \x11\x2tu\a\r\x2\x2uv\x5\f\a\x2v}\b\b\x1\x2wx\a\x11\x2"+
+		"\x2xy\x5\xE\b\x2yz\b\b\x1\x2z|\x3\x2\x2\x2{w\x3\x2\x2\x2|\x7F\x3\x2\x2"+
+		"\x2}{\x3\x2\x2\x2}~\x3\x2\x2\x2~\x8D\x3\x2\x2\x2\x7F}\x3\x2\x2\x2\x80"+
+		"\x81\a\x11\x2\x2\x81\x82\a\xE\x2\x2\x82\x88\b\b\x1\x2\x83\x84\x5\x1C\xF"+
+		"\x2\x84\x85\b\b\x1\x2\x85\x87\x3\x2\x2\x2\x86\x83\x3\x2\x2\x2\x87\x8A"+
+		"\x3\x2\x2\x2\x88\x86\x3\x2\x2\x2\x88\x89\x3\x2\x2\x2\x89\x8B\x3\x2\x2"+
+		"\x2\x8A\x88\x3\x2\x2\x2\x8B\x8C\a\xF\x2\x2\x8C\x8E\b\b\x1\x2\x8D\x80\x3"+
+		"\x2\x2\x2\x8D\x8E\x3\x2\x2\x2\x8E\xF\x3\x2\x2\x2\x8F\x90\a\x10\x2\x2\x90"+
+		"\x91\x5 \x11\x2\x91\x92\a\xE\x2\x2\x92\x98\b\t\x1\x2\x93\x94\x5\x1C\xF"+
+		"\x2\x94\x95\b\t\x1\x2\x95\x97\x3\x2\x2\x2\x96\x93\x3\x2\x2\x2\x97\x9A"+
+		"\x3\x2\x2\x2\x98\x96\x3\x2\x2\x2\x98\x99\x3\x2\x2\x2\x99\x9B\x3\x2\x2"+
+		"\x2\x9A\x98\x3\x2\x2\x2\x9B\x9C\a\xF\x2\x2\x9C\x9D\b\t\x1\x2\x9D\x11\x3"+
+		"\x2\x2\x2\x9E\x9F\a\n\x2\x2\x9F\xA0\a\x32\x2\x2\xA0\xA1\a!\x2\x2\xA1\xA2"+
+		"\x5 \x11\x2\xA2\xA3\a\t\x2\x2\xA3\xA4\x5 \x11\x2\xA4\xA5\a\r\x2\x2\xA5"+
+		"\xA6\a\xE\x2\x2\xA6\xAC\b\n\x1\x2\xA7\xA8\x5\x1C\xF\x2\xA8\xA9\b\n\x1"+
+		"\x2\xA9\xAB\x3\x2\x2\x2\xAA\xA7\x3\x2\x2\x2\xAB\xAE\x3\x2\x2\x2\xAC\xAA"+
+		"\x3\x2\x2\x2\xAC\xAD\x3\x2\x2\x2\xAD\xAF\x3\x2\x2\x2\xAE\xAC\x3\x2\x2"+
+		"\x2\xAF\xB0\a\xF\x2\x2\xB0\xB1\b\n\x1\x2\xB1\x13\x3\x2\x2\x2\xB2\xB3\a"+
+		"\v\x2\x2\xB3\xB4\a\x32\x2\x2\xB4\xB5\a!\x2\x2\xB5\xB6\x5 \x11\x2\xB6\xB7"+
+		"\a\t\x2\x2\xB7\xB8\x5 \x11\x2\xB8\xB9\a\r\x2\x2\xB9\xBA\a\xE\x2\x2\xBA"+
+		"\xC0\b\v\x1\x2\xBB\xBC\x5\x1C\xF\x2\xBC\xBD\b\v\x1\x2\xBD\xBF\x3\x2\x2"+
+		"\x2\xBE\xBB\x3\x2\x2\x2\xBF\xC2\x3\x2\x2\x2\xC0\xBE\x3\x2\x2\x2\xC0\xC1"+
+		"\x3\x2\x2\x2\xC1\xC3\x3\x2\x2\x2\xC2\xC0\x3\x2\x2\x2\xC3\xC4\a\xF\x2\x2"+
+		"\xC4\xC5\b\v\x1\x2\xC5\x15\x3\x2\x2\x2\xC6\xC7\a\x3\x2\x2\xC7\xD1\b\f"+
+		"\x1\x2\xC8\xC9\a\x4\x2\x2\xC9\xD1\b\f\x1\x2\xCA\xCB\a\x5\x2\x2\xCB\xD1"+
+		"\b\f\x1\x2\xCC\xCD\a\x6\x2\x2\xCD\xD1\b\f\x1\x2\xCE\xCF\a\a\x2\x2\xCF"+
+		"\xD1\b\f\x1\x2\xD0\xC6\x3\x2\x2\x2\xD0\xC8\x3\x2\x2\x2\xD0\xCA\x3\x2\x2"+
+		"\x2\xD0\xCC\x3\x2\x2\x2\xD0\xCE\x3\x2\x2\x2\xD1\x17\x3\x2\x2\x2\xD2\xD3"+
+		"\a\x32\x2\x2\xD3\xD4\a/\x2\x2\xD4\xD5\x5\x16\f\x2\xD5\xD6\a\x30\x2\x2"+
+		"\xD6\xD7\b\r\x1\x2\xD7\x19\x3\x2\x2\x2\xD8\xD9\a\x32\x2\x2\xD9\xE2\a\x1C"+
+		"\x2\x2\xDA\xDF\x5 \x11\x2\xDB\xDC\a\x31\x2\x2\xDC\xDE\x5 \x11\x2\xDD\xDB"+
+		"\x3\x2\x2\x2\xDE\xE1\x3\x2\x2\x2\xDF\xDD\x3\x2\x2\x2\xDF\xE0\x3\x2\x2"+
+		"\x2\xE0\xE3\x3\x2\x2\x2\xE1\xDF\x3\x2\x2\x2\xE2\xDA\x3\x2\x2\x2\xE2\xE3"+
+		"\x3\x2\x2\x2\xE3\xE4\x3\x2\x2\x2\xE4\xE5\a\x1D\x2\x2\xE5\xE6\b\xE\x1\x2"+
+		"\xE6\x1B\x3\x2\x2\x2\xE7\xE8\x5\n\x6\x2\xE8\xE9\b\xF\x1\x2\xE9\x10A\x3"+
+		"\x2\x2\x2\xEA\xEB\a\x18\x2\x2\xEB\xEC\x5 \x11\x2\xEC\xED\a\x30\x2\x2\xED"+
+		"\xEE\b\xF\x1\x2\xEE\x10A\x3\x2\x2\x2\xEF\xF0\x5\xE\b\x2\xF0\xF1\b\xF\x1"+
+		"\x2\xF1\x10A\x3\x2\x2\x2\xF2\xF3\x5\x10\t\x2\xF3\xF4\b\xF\x1\x2\xF4\x10A"+
+		"\x3\x2\x2\x2\xF5\xF6\x5\x1A\xE\x2\xF6\xF7\a\x30\x2\x2\xF7\xF8\b\xF\x1"+
+		"\x2\xF8\x10A\x3\x2\x2\x2\xF9\xFA\x5\b\x5\x2\xFA\xFB\a\x30\x2\x2\xFB\xFC"+
+		"\b\xF\x1\x2\xFC\x10A\x3\x2\x2\x2\xFD\xFE\x5\x18\r\x2\xFE\xFF\b\xF\x1\x2"+
+		"\xFF\x10A\x3\x2\x2\x2\x100\x101\x5\x12\n\x2\x101\x102\b\xF\x1\x2\x102"+
+		"\x10A\x3\x2\x2\x2\x103\x104\x5\x14\v\x2\x104\x105\b\xF\x1\x2\x105\x10A"+
+		"\x3\x2\x2\x2\x106\x107\x5\f\a\x2\x107\x108\b\xF\x1\x2\x108\x10A\x3\x2"+
+		"\x2\x2\x109\xE7\x3\x2\x2\x2\x109\xEA\x3\x2\x2\x2\x109\xEF\x3\x2\x2\x2"+
+		"\x109\xF2\x3\x2\x2\x2\x109\xF5\x3\x2\x2\x2\x109\xF9\x3\x2\x2\x2\x109\xFD"+
+		"\x3\x2\x2\x2\x109\x100\x3\x2\x2\x2\x109\x103\x3\x2\x2\x2\x109\x106\x3"+
+		"\x2\x2\x2\x10A\x1D\x3\x2\x2\x2\x10B\x10C\a\x15\x2\x2\x10C\x10D\a\x32\x2"+
+		"\x2\x10D\x117\b\x10\x1\x2\x10E\x10F\a\x16\x2\x2\x10F\x113\a/\x2\x2\x110"+
+		"\x111\x5\x18\r\x2\x111\x112\b\x10\x1\x2\x112\x114\x3\x2\x2\x2\x113\x110"+
+		"\x3\x2\x2\x2\x114\x115\x3\x2\x2\x2\x115\x113\x3\x2\x2\x2\x115\x116\x3"+
+		"\x2\x2\x2\x116\x118\x3\x2\x2\x2\x117\x10E\x3\x2\x2\x2\x117\x118\x3\x2"+
+		"\x2\x2\x118\x11F\x3\x2\x2\x2\x119\x11A\a\x17\x2\x2\x11A\x11B\a/\x2\x2"+
+		"\x11B\x11C\x5\x16\f\x2\x11C\x11D\a\x30\x2\x2\x11D\x11E\b\x10\x1\x2\x11E"+
+		"\x120\x3\x2\x2\x2\x11F\x119\x3\x2\x2\x2\x11F\x120\x3\x2\x2\x2\x120\x121"+
+		"\x3\x2\x2\x2\x121\x122\a\xE\x2\x2\x122\x128\b\x10\x1\x2\x123\x124\x5\x1C"+
+		"\xF\x2\x124\x125\b\x10\x1\x2\x125\x127\x3\x2\x2\x2\x126\x123\x3\x2\x2"+
+		"\x2\x127\x12A\x3\x2\x2\x2\x128\x126\x3\x2\x2\x2\x128\x129\x3\x2\x2\x2"+
+		"\x129\x12B\x3\x2\x2\x2\x12A\x128\x3\x2\x2\x2\x12B\x12C\a\xF\x2\x2\x12C"+
+		"\x12D\b\x10\x1\x2\x12D\x1F\x3\x2\x2\x2\x12E\x12F\b\x11\x1\x2\x12F\x130"+
+		"\a(\x2\x2\x130\x131\x5 \x11\x4\x131\x132\b\x11\x1\x2\x132\x13C\x3\x2\x2"+
+		"\x2\x133\x134\a\x1C\x2\x2\x134\x135\x5 \x11\x2\x135\x136\a\x1D\x2\x2\x136"+
+		"\x137\b\x11\x1\x2\x137\x13C\x3\x2\x2\x2\x138\x139\x5\x6\x4\x2\x139\x13A"+
+		"\b\x11\x1\x2\x13A\x13C\x3\x2\x2\x2\x13B\x12E\x3\x2\x2\x2\x13B\x133\x3"+
+		"\x2\x2\x2\x13B\x138\x3\x2\x2\x2\x13C\x167\x3\x2\x2\x2\x13D\x13E\f\r\x2"+
+		"\x2\x13E\x13F\a&\x2\x2\x13F\x140\x5 \x11\xE\x140\x141\b\x11\x1\x2\x141"+
+		"\x166\x3\x2\x2\x2\x142\x143\f\f\x2\x2\x143\x144\a%\x2\x2\x144\x145\x5"+
+		" \x11\r\x145\x146\b\x11\x1\x2\x146\x166\x3\x2\x2\x2\x147\x148\f\v\x2\x2"+
+		"\x148\x149\x5\x4\x3\x2\x149\x14A\x5 \x11\f\x14A\x14B\b\x11\x1\x2\x14B"+
+		"\x166\x3\x2\x2\x2\x14C\x14D\f\n\x2\x2\x14D\x14E\a\x1B\x2\x2\x14E\x14F"+
+		"\x5 \x11\v\x14F\x150\b\x11\x1\x2\x150\x166\x3\x2\x2\x2\x151\x152\f\t\x2"+
+		"\x2\x152\x153\a\x1E\x2\x2\x153\x154\x5 \x11\n\x154\x155\b\x11\x1\x2\x155"+
+		"\x166\x3\x2\x2\x2\x156\x157\f\b\x2\x2\x157\x158\a\x1F\x2\x2\x158\x159"+
+		"\x5 \x11\t\x159\x15A\b\x11\x1\x2\x15A\x166\x3\x2\x2\x2\x15B\x15C\f\a\x2"+
+		"\x2\x15C\x15D\a \x2\x2\x15D\x15E\x5 \x11\b\x15E\x15F\b\x11\x1\x2\x15F"+
+		"\x166\x3\x2\x2\x2\x160\x161\f\x6\x2\x2\x161\x162\a$\x2\x2\x162\x163\x5"+
+		" \x11\a\x163\x164\b\x11\x1\x2\x164\x166\x3\x2\x2\x2\x165\x13D\x3\x2\x2"+
+		"\x2\x165\x142\x3\x2\x2\x2\x165\x147\x3\x2\x2\x2\x165\x14C\x3\x2\x2\x2"+
+		"\x165\x151\x3\x2\x2\x2\x165\x156\x3\x2\x2\x2\x165\x15B\x3\x2\x2\x2\x165"+
+		"\x160\x3\x2\x2\x2\x166\x169\x3\x2\x2\x2\x167\x165\x3\x2\x2\x2\x167\x168"+
+		"\x3\x2\x2\x2\x168!\x3\x2\x2\x2\x169\x167\x3\x2\x2\x2\x19%\'\x38G]l}\x88"+
+		"\x8D\x98\xAC\xC0\xD0\xDF\xE2\x109\x115\x117\x11F\x128\x13B\x165\x167";
 	public static readonly ATN _ATN =
 		new ATNDeserializer().Deserialize(_serializedATN.ToCharArray());
 }

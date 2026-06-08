@@ -1,219 +1,145 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace CodeRuner.Compailer
 {
+    /// <summary>
+    /// Improved Scope management for symbol tables with proper nested scope support
+    /// </summary>
     public class Scope
     {
         public class Definition
         {
             public string SymbolName { get; set; }
             public string SymbolType { get; set; }
+            public string Kind { get; set; } // "variable", "function", "scope"
+            
+            public override string ToString()
+            {
+                return $"{SymbolName}: {SymbolType} ({Kind})";
+            }
         }
 
-
-        public Definition[] poshte;
-        public int len = 1000;
-
+        // Stack of scopes - each scope is a dictionary
+        private List<Dictionary<string, Definition>> _scopes;
+        
         public Scope()
         {
-            poshte = new Definition[1000];
+            _scopes = new List<Dictionary<string, Definition>>();
+            EnterScope(); // Global scope
         }
 
-
-        // int top= 0;
-        public void push(Definition x)
+        /// <summary>
+        /// Enter a new scope (e.g., for functions, blocks)
+        /// </summary>
+        public void EnterScope()
         {
-            int i = 0;
-            while (poshte[i] != null)
-            {
-                ++i;
-            }
-
-            if (i + 1 >= poshte.Length)
-            {
-                Array.Resize(ref poshte, poshte.Length * 2);
-            }
-
-            poshte[i] = x;
+            _scopes.Add(new Dictionary<string, Definition>(StringComparer.OrdinalIgnoreCase));
         }
 
-        public Definition pop()
+        /// <summary>
+        /// Exit current scope and remove all symbols in it
+        /// </summary>
+        public void ExitScope()
         {
-            int i = 0;
-
-            while (i != poshte.Length - 1 && poshte[i] != null)
+            if (_scopes.Count > 1) // Keep at least global scope
             {
-                i++;
+                _scopes.RemoveAt(_scopes.Count - 1);
             }
-            Definition ret;
-            ret = poshte[i - 1];
-            poshte[i - 1] = null;
-            return ret;
         }
-        public Definition FindSymbol(string x)
-        {
-            //Console.WriteLine("FindSymbol");
-            x = x.ToLower();
-            int top = 0;
-            while (poshte[top] != null)
-            {
-                ++top;
-            }
-            //Console.WriteLine(top);
 
-            for (int i = 1; i <= top; i++)
-                //if(poshte[top - i]!=null)
-                if (poshte[top - i].SymbolName == x)
-                    return poshte[top - i];
+        /// <summary>
+        /// Add a symbol to current scope
+        /// </summary>
+        public bool AddSymbol(string symbolName, string type, string kind = "variable")
+        {
+            symbolName = symbolName.ToLower();
+            
+            // Check if symbol exists in current scope
+            if (_scopes.Count > 0)
+            {
+                var currentScope = _scopes[_scopes.Count - 1];
+                if (currentScope.ContainsKey(symbolName))
+                {
+                    return false; // Symbol already exists in this scope
+                }
+                currentScope[symbolName] = new Definition
+                {
+                    SymbolName = symbolName,
+                    SymbolType = type,
+                    Kind = kind
+                };
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Find a symbol starting from innermost scope outward
+        /// </summary>
+        public Definition FindSymbol(string symbolName)
+        {
+            symbolName = symbolName.ToLower();
+            
+            // Search from innermost to outermost scope
+            for (int i = _scopes.Count - 1; i >= 0; i--)
+            {
+                if (_scopes[i].TryGetValue(symbolName, out var definition))
+                {
+                    return definition;
+                }
+            }
             return null;
         }
-        public bool FindInScope(string x, string typ)
-        {
-            //Console.WriteLine("FindInScope");
-            x = x.ToLower();
-            int top = 0;
-            while (poshte[top] != null)
-            {
-                ++top;
-            }
-            //Console.WriteLine(top);
 
-            for (int i = top - 1; i >= 0; i--)
-            //if(poshte[top - i]!=null)
+        /// <summary>
+        /// Check if symbol exists in current scope only (not parent scopes)
+        /// </summary>
+        public bool FindInScope(string symbolName, string kind)
+        {
+            symbolName = symbolName.ToLower();
+            
+            if (_scopes.Count > 0)
             {
-                if (poshte[i].SymbolName == "scopesymbol"/* | (poshte[i].SymbolType == "function" && typ != "function")*/) break;
-                if (poshte[i].SymbolName == x)
+                var currentScope = _scopes[_scopes.Count - 1];
+                if (currentScope.TryGetValue(symbolName, out var definition))
                 {
-                    System.Console.WriteLine(typ + " Redefinition!");
-                    return false;
+                    // Check if it's a scope marker or same kind
+                    if (definition.Kind == "scope" || definition.Kind == kind)
+                    {
+                        return false; // Already defined
+                    }
                 }
+                return true; // Can add
             }
             return true;
         }
 
-
-
         /// <summary>
-        /// Keep symbol definitions
-        /// Dictionary is the .Net generic implementation of hashtable.
-        /// The symbol definitions are accessible using their name. 
+        /// Get all symbols in current scope
         /// </summary>
-        Dictionary<string, Definition> Symbols = new Dictionary<string, Definition>();
-        //System.Collections.Stack stack;
-        // Stack stack;
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="SymbolName"></param>
-        /// <returns></returns>
-
-
-
-        public void AddSymbol(string SymbolName, string type)
+        public List<Definition> GetCurrentScopeSymbols()
         {
-            SymbolName = SymbolName.ToLower();
-            //Console.Beep();
-            //Console.WriteLine("AddSymbol");
-            //if (FindSymbol(SymbolName) != null)
-            //   throw new Exception("Duplicate Symbol Definition!");
-            //Symbols[SymbolName] = (new Definition()
-            //{
-            //    SymbolName = SymbolName,
-            //    SymbolType = type
-            //});
-            push(new Definition()
+            if (_scopes.Count > 0)
             {
-                SymbolName = SymbolName,
-                SymbolType = type
-            });
-        }
-        public class Stack
-        {
-            private string[] s;
-            public int length;
-            public Stack(int N)
-            {
-                s = new string[N];
+                return _scopes[_scopes.Count - 1].Values.ToList();
             }
-
-            public void push(string x)
-            {
-                int i = 0;
-                while (s[i] != null)
-                {
-                    ++i;
-                }
-
-                if (i + 1 >= s.Length)
-                {
-                    Array.Resize(ref s, s.Length * 2);
-                }
-
-                s[i] = x;
-            }
-
-            public string pop()
-            {
-                int i = 0;
-
-                while (i != s.Length && s[i] != null)
-                {
-                    i++;
-                }
-
-                s[i] = null;
-                return s[i - 1];
-            }
-
-
-        }
-
-
-
-        // sc.SymbolName = "ScopeSymbol";
-        /// <summary>
-        /// This is not required here.
-        /// </summary>
-        public void EnterScope()
-        {
-
-            //         throw new NotImplementedException();
-
-
-            //Console.WriteLine("Sc0peSymbol");
-            AddSymbol("ScopeSymbol", "scopesymbol");
-            //push(sc);
+            return new List<Definition>();
         }
 
         /// <summary>
-        /// This is not required here.
+        /// Clear all scopes and reset
         /// </summary>
-        public void ExitScope()
+        public void Clear()
         {
-            //System.Console.Beep();
-            //Console.WriteLine("\n*******\n");
-            while (pop().SymbolName != "scopesymbol") ;
-            //    throw new NotImplementedException();
-        }
-        public void ExitFunc()
-        {
-            //System.Console.Beep();
-            //Console.WriteLine("\n*******\n");
-            while (true)
-            {
-                Definition s = pop();
-                if (s.SymbolType == "function")
-                {
-                    AddSymbol(s.SymbolName, s.SymbolType);
-                    break;
-                }
-            }
-            ;
-            //    throw new NotImplementedException();
+            _scopes.Clear();
+            EnterScope();
         }
 
+        /// <summary>
+        /// Get scope depth (for debugging)
+        /// </summary>
+        public int ScopeDepth => _scopes.Count;
     }
 }
