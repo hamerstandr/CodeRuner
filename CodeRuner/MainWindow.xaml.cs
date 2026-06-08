@@ -153,86 +153,149 @@ namespace CodeRuner
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             ErrorList1.Items.Clear();
-            //string File = "Simple";
-
-            AntlrInputStream input = new AntlrInputStream(GetneviseText());
-            input.name = "Simple";
-            var lexer = new sampleLexer(input);
-            CommonTokenStream tokens = new CommonTokenStream(lexer);
-            var parser = new sampleParser(tokens);
-
-
-
-            var exp = parser.prog();
-            for (int i = 0; i < parser.khata_parser.Count(); i++)
-            {
-                if (parser.khata_parser[i] != null)
-                {
-                    ErrorList1.Items.Add(new ListViewItem() { Content = parser.khata_parser[i],Foreground=Brushes.DarkRed });
-                }
-            }
-            if (parser.khata_parser.Count() == 0)
-                DebugAndRun(parser.cod + "}");
-            parser.khata_pakon();
+            string codeText = GetneviseText();
             
+            if (string.IsNullOrWhiteSpace(codeText))
+            {
+                ErrorList1.Items.Add(new ListViewItem() { Content = "Error: No code to compile", Foreground = Brushes.DarkRed });
+                return;
+            }
+
+            try
+            {
+                AntlrInputStream input = new AntlrInputStream(codeText);
+                input.name = "CodN_Program";
+                var lexer = new sampleLexer(input);
+                CommonTokenStream tokens = new CommonTokenStream(lexer);
+                var parser = new sampleParser(tokens);
+                
+                // Remove error listeners to use custom error handling
+                parser.RemoveErrorListeners();
+                
+                var exp = parser.prog();
+                
+                // Display errors
+                if (parser.errorCount > 0)
+                {
+                    foreach (var error in parser.khata_parser)
+                    {
+                        if (!string.IsNullOrEmpty(error))
+                        {
+                            ErrorList1.Items.Add(new ListViewItem() { Content = error, Foreground = Brushes.DarkRed });
+                        }
+                    }
+                    
+                    // Add syntax errors from ANTLR
+                    if (parser.NumberOfSyntaxErrors > 0)
+                    {
+                        ErrorList1.Items.Add(new ListViewItem() { 
+                            Content = $"Syntax errors detected: {parser.NumberOfSyntaxErrors}", 
+                            Foreground = Brushes.Red 
+                        });
+                    }
+                }
+                else if (parser.khata_parser.Count == 0)
+                {
+                    // No errors, proceed to compile and run
+                    string csharpCode = parser.cod + Environment.NewLine + "}";
+                    CshapTextBox.Document.Text = csharpCode;
+                    DebugAndRun(csharpCode);
+                }
+                
+                parser.khata_pakon();
+            }
+            catch (Exception ex)
+            {
+                ErrorList1.Items.Add(new ListViewItem() { 
+                    Content = $"Compilation error: {ex.Message}", 
+                    Foreground = Brushes.DarkRed 
+                });
+            }
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             DebugAndRun(GetCshapText());
         }
-        private void DebugAndRun(string Code )
+        private void DebugAndRun(string code)
         {
-            CSharpCodeProvider codeProvider = new CSharpCodeProvider();
-#pragma warning disable CS0618 // Type or member is obsolete
-            ICodeCompiler icc = codeProvider.CreateCompiler();
-#pragma warning restore CS0618 // Type or member is obsolete
-            string Output = "Out.exe";
-            ErrorText.Text = "";
-            CompilerParameters parameters = new CompilerParameters();
-            CompilerResults results;
-            // Make sure we generate an EXE, not a DLL
-            parameters.GenerateExecutable = true;
-            parameters.OutputAssembly = Output;
-            results = icc.CompileAssemblyFromSource(parameters, Code);
-
-            if (results.Errors.HasErrors)
+            if (string.IsNullOrWhiteSpace(code))
             {
-                // There were compiler errors
-                ErrorText.Foreground = Brushes.DarkRed;
-
-                foreach (CompilerError item in results.Errors)
-                {
-                    ErrorText.Text = (ErrorText.Text + ("Line number "
-                                + (item.Line + (", Error Number: "
-                                + (item.ErrorNumber + (", \'"
-                                + (item.ErrorText + (";"
-                                + (Environment.NewLine + Environment.NewLine)))))))));
-                }
-
-                //for (int k = 0; k < results.Errors.Count; k++)
-                //{
-                //    //if (results.Errors[k]==null) break;
-                //    //string s = results.Errors;
-                //    ErrorText.Text = (ErrorText.Text + ("Line number "
-                //                + (results.Errors[k].Line + (", Error Number: "
-                //                + (results.Errors[k].ErrorNumber + (", \'"
-                //                + (results.Errors[k].ErrorText + (";"
-                //                + (Environment.NewLine + Environment.NewLine)))))))));
-                //}
-
+                ErrorText.Text = "Error: No code to compile";
+                ErrorText.Foreground = Brushes.Red;
+                return;
             }
-            else
+
+            CSharpCodeProvider codeProvider = new CSharpCodeProvider();
+            string outputExe = "Out.exe";
+            ErrorText.Text = "";
+            
+            CompilerParameters parameters = new CompilerParameters
             {
-                // Successful Compile
-                ErrorText.Foreground = Brushes.DarkBlue;
-                ErrorText.Text = "Success!";
-                var x = MessageBox.Show("Debugin was Successfully.Are you want RUN now?", "Question", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                if (x == MessageBoxResult.Yes)
+                GenerateExecutable = true,
+                OutputAssembly = outputExe,
+                TreatWarningsAsErrors = false,
+                IncludeDebugInformation = true
+            };
+            
+            // Add necessary references
+            parameters.ReferencedAssemblies.Add("System.dll");
+            parameters.ReferencedAssemblies.Add("System.Core.dll");
+            parameters.ReferencedAssemblies.Add("Microsoft.CSharp.dll");
+
+            try
+            {
+                CompilerResults results = codeProvider.CompileAssemblyFromSource(parameters, code);
+
+                if (results.Errors.HasErrors)
                 {
-                    try { System.Diagnostics.Process.Start(Output); } catch { }
+                    ErrorText.Foreground = Brushes.DarkRed;
+                    StringBuilder errorBuilder = new StringBuilder();
+                    errorBuilder.AppendLine($"Compilation failed with {results.Errors.Count} error(s):");
+                    errorBuilder.AppendLine(new string('-', 50));
+
+                    foreach (CompilerError item in results.Errors)
+                    {
+                        errorBuilder.AppendLine($"Line {item.Line}, Column {item.Column}:");
+                        errorBuilder.AppendLine($"  Error {item.ErrorNumber}: {item.ErrorText}");
+                        errorBuilder.AppendLine();
+                    }
+
+                    ErrorText.Text = errorBuilder.ToString();
                     
+                    // Show error count in title
+                    this.Title = $"Code Runner - Compilation Errors: {results.Errors.Count}";
                 }
+                else
+                {
+                    // Successful Compile
+                    ErrorText.Foreground = Brushes.DarkGreen;
+                    ErrorText.Text = "✓ Compilation successful!";
+                    this.Title = "Code Runner - Ready";
+                    
+                    var result = MessageBox.Show(
+                        "Compilation successful!\n\nDo you want to run the program now?", 
+                        "Compilation Success", 
+                        MessageBoxButton.YesNo, 
+                        MessageBoxImage.Question);
+                    
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        try 
+                        { 
+                            System.Diagnostics.Process.Start(outputExe); 
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorText.Text += $"\n\nError running program: {ex.Message}";
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorText.Foreground = Brushes.Red;
+                ErrorText.Text = $"Fatal compilation error: {ex.Message}\n\nStack Trace:\n{ex.StackTrace}";
             }
         }
         private void Button_Click_2(object sender, RoutedEventArgs e)
